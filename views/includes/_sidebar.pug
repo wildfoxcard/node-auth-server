@@ -1,0 +1,125 @@
+.app-sidebar__overlay(data-toggle="sidebar")
+aside.app-sidebar
+
+	.app-sidebar__user
+		if user.profile.picture
+			img.mr-2(src=user.profile.picture)
+		else		
+			img.mr-2(src=user.gravatar(user.email, 30))
+		//- img.app-sidebar__user-avatar(src='https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg', alt='User Image')
+		div
+			p.app-sidebar__user-name=  user.email
+			if user.profile.name
+				p.app-sidebar__user-designation= user.profile.name
+
+	ul.app-menu
+		li
+			a.app-menu__item(href='/dashboard' class={'active': activePage == 'dashboard'})
+				i.app-menu__icon.fa.fa-tachometer
+				span.app-menu__label Dashboard
+		li
+			a.app-menu__item(href='/user-management/' class={'active': activePage == 'user-management'})
+				i.app-menu__icon.fa.fa-users
+				span.app-menu__label Users
+		li
+			a.app-menu__item(href='/permissions/' class={'active': activePage == 'permissions'})
+				i.app-menu__icon.fa.fa-key
+				span.app-menu__label Permissions
+		li
+			a.app-menu__item(href='/roles/' class={'active': activePage == 'roles'})
+				i.app-menu__icon.fa.fa-object-group
+				span.app-menu__label Roles
+		li
+			a.app-menu__item(href='/settings' class={'active': activePage == 'settings'})
+				i.app-menu__icon.fa.fa-cog
+				span.app-menu__label Settings
+
+
+
+
+
+
+
+
+
+		//- li.treeview(class={'is-expanded': activeGroup == 'forms'})
+		//- 	a.app-menu__item(href='#' data-toggle='treeview')
+		//- 		i.app-menu__icon.fa.fa-edit
+		//- 		span.app-menu__label Forms
+		//- 		i.treeview-indicator.fa.fa-angle-right
+		//- 	ul.treeview-menu
+		//- 		li
+		//- 			a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Form Components
+		//- 		li
+		//- 			a.treeview-item(href='form-custom.html' class={'active': activePage == 'form-custom'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Custom Components
+		//- 		li
+		//- 			a.treeview-item(href='form-samples.html' class={'active': activePage == 'form-samples'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Form Samples
+		//- 		li
+		//- 			a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Form Notifications
+
+		//- li.treeview(class={'is-expanded': activeGroup == 'tables'})
+		//- 	a.app-menu__item(href='#' data-toggle='treeview')
+		//- 		i.app-menu__icon.fa.fa-th-list
+		//- 		span.app-menu__label Tables
+		//- 		i.treeview-indicator.fa.fa-angle-right
+		//- 	ul.treeview-menu
+		//- 		li
+		//- 			a.treeview-item(href='table-basic.html' class={'active': activePage == 'basic-table'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Basic Tables
+		//- 		li
+		//- 			a.treeview-item(href='table-data-table.html' class={'active': activePage == 'data-table'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Data Tables
+
+		//- li.treeview(class={'is-expanded': activeGroup == 'pages'})
+		//- 	a.app-menu__item(href='#' data-toggle='treeview')
+		//- 		i.app-menu__icon.fa.fa-file-text
+		//- 		span.app-menu__label Pages
+		//- 		i.treeview-indicator.fa.fa-angle-right
+		//- 	ul.treeview-menu
+		//- 		li
+		//- 			a.treeview-item(href='blank-page.html' class={'active': activePage == 'blank-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Blank Page
+		//- 		li
+		//- 			a.treeview-item(href='page-login.html')
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Login Page
+		//- 		li
+		//- 			a.treeview-item(href='page-lockscreen.html')
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Lockscreen Page
+		//- 		li
+		//- 			a.treeview-item(href='page-user.html' class={'active': activePage == 'user-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  User Page
+		//- 		li
+		//- 			a.treeview-item(href='page-invoice.html' class={'active': activePage == 'invoice-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Invoice Page
+		//- 		li
+		//- 			a.treeview-item(href='page-calendar.html' class={'active': activePage == 'calendar-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Calendar Page
+		//- 		li
+		//- 			a.treeview-item(href='page-mailbox.html' class={'active': activePage == 'mailbox-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Mailbox
+		//- 		li
+		//- 			a.treeview-item(href='page-error.html' class={'active': activePage == 'error-page'})
+		//- 				i.icon.fa.fa-circle-o
+		//- 				|  Error Page
+
+		//- li
+		//- 	a.app-menu__item(href='docs.html' class={'active': activePage == 'docs'})
+		//- 		i.app-menu__icon.fa.fa-file-code-o
+		//- 		span.app-menu__label Docs

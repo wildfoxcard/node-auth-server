@@ -1,0 +1,41 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'roles';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-object-group
+        | Roles
+      p 
+        | Group permissions into bundles called roles
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Roles
+
+  .row
+    .col-md-12
+      .tile
+        .tile-title
+          a.btn.btn-primary(href="/roles/form") New Role
+        .tile-body
+          .table-responsive
+            table.table.table-hover.table-bordered#leadManagementTable
+              thead
+                tr
+                  th Role
+                  th Action
+
+block specific-js
+  // Data table plugin
+//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
+//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
+//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
+//-   script(type='text/javascript', src='/js/pages/lead-management/index.js')

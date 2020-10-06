@@ -1,0 +1,118 @@
+extends ../layouts/account-layout
+
+block content
+  //- 	form.login-form(action="index.html")
+  //- 		h3.login-head
+  //- 			i.fa.fa-lg.fa-fw.fa-user
+  //- 			| SIGN IN
+  //- 		.form-group
+  //- 			label.control-label USERNAME
+  //- 			input.form-control(type="text", placeholder="Email", autofocus)
+
+  //- 		.form-group
+  //- 			label.control-label PASSWORD
+  //- 			input.form-control(type="password", placeholder="Password")
+
+  //- 		.form-group
+  //- 			.utility
+  //- 				.animated-checkbox
+  //- 					label
+  //- 						input(type="checkbox")
+  //- 						span.label-text Stay Signed in
+  //- 				p.semibold-text.mb-2
+  //- 					a(href="#" data-toggle="flip") Forgot Password ?
+
+  //- 		.form-group.btn-container
+  //- 			button.btn.btn-primary.btn-block
+  //- 				i.fa.fa-sign-in.fa-lg.fa-fw
+  //- 				| SIGN IN
+
+  //- 	form.forget-form(action="index.html")
+  //- 		h3.login-head
+  //- 			i.fa.fa-lg.fa-fw.fa-lock
+  //- 			| Forgot Password ?
+  //- 		.form-group
+  //- 			label.control-label EMAIL
+  //- 			input.form-control(type="text", placeholder="Email")
+
+  //- 		.form-group.btn-container
+  //- 			button.btn.btn-primary.btn-block
+  //- 				i.fa.fa-unlock.fa-lg.fa-fw
+  //- 				| RESET
+
+  //- 		.form-group.mt-3
+  //- 			p.semibold-text.mb-0
+  //- 				a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
+  .login-container
+    .login-box
+      form.login-form(method='POST')
+        h3.login-head
+          i.fa.fa-lg.fa-fw.fa-user
+          | SIGN IN
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+          label.control-label Email
+          input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
+
+        .form-group
+          label.control-label PASSWORD
+          input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='current-password', required)
+
+        .form-group
+          .utility
+            p.semibold-text
+              a(href='/signup') Sign Up
+
+
+            p.semibold-text.mb-2
+              a(href='/forgot') Forgot Password ?
+
+        .form-group.btn-container
+          button.btn.btn-primary.btn-block
+            i.fa.fa-sign-in.fa-lg.fa-fw
+            | SIGN IN
+        //- input(type='hidden', name='_csrf', value=_csrf)
+        //- .form-group.row
+        //-   label.col-md-3.col-form-label.font-weight-bold.text-right(for='email') Email
+        //-   .col-md-7
+        //-     input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
+        //- .form-group.row
+        //-   label.col-md-3.col-form-label.font-weight-bold.text-right(for='password') Password
+        //-   .col-md-7
+        //-     input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='current-password', required)
+        //- .form-group
+        //-   .offset-md-3.col-md-7.pl-2
+        //-     button.col-md-3.btn.btn-primary(type='submit')
+        //-       i.far.fa-user.fa-sm
+        //-       | Login
+        //-     a.btn.btn-link(href='/forgot') Forgot your password?
+        //- .form-group
+        //-   .offset-md-3.col-md-7.pl-2
+        //-     hr
+    .login-box
+
+      form.login-form
+        a.btn.btn-block.btn-google.btn-social(href='/auth/google')
+          i.fab.fa-google-plus-g.fa-xs
+          | Sign in with Google
+        a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
+          i.fab.fa-facebook-f.fa-sm
+          | Sign in with Facebook
+        a.btn.btn-block.btn-instagram.btn-social(href='/auth/instagram')
+          i.fab.fa-instagram.fa-sm
+          | Sign in with Instagram
+        a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
+          i.fab.fa-twitter.fa-sm
+          | Sign in with Twitter
+        a.btn.btn-block.btn-linkedin.btn-social(href='/auth/linkedin')
+          i.fab.fa-linkedin-in.fa-sm
+          | Sign in with LinkedIn
+        a.btn.btn-block.btn-twitch.btn-social(href='/auth/twitch')
+          i.fab.fa-twitch.fa-sm
+          | Sign in with Twitch
+        a.btn.btn-block.btn-github.btn-social(href='/auth/github')
+          i.fab.fa-github.fa-sm
+          | Sign in with GitHub
+        a.btn.btn-block.btn-snapchat.btn-social(href='/auth/snapchat')
+          i.fab.fa-snapchat-ghost.fa-sm
+          | Sign in with Snapchat

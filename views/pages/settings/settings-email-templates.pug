@@ -1,0 +1,71 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'settings';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-cog
+        | Settings
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Settings
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          .row
+            .col-md-3
+              include ../../includes/settings-menu
+
+            .col-md-9
+              h2 Email Templates
+              br
+              br
+
+              h3 Email address verification
+              
+              .form-group
+                label(for='exampleInputEmail1') Subject
+                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                         
+              .form-group
+                label(for='exampleTextarea') Message
+                textarea#exampleTextarea.form-control(rows='3')
+
+              h3 Password reset
+
+              .form-group
+                label(for='exampleInputEmail1') Subject
+                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                  
+              .form-group
+                label(for='exampleTextarea') Message
+                textarea#exampleTextarea.form-control(rows='3')
+
+              h3 Email address change
+
+              .form-group
+                label(for='exampleInputEmail1') Subject
+                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                  
+              .form-group
+                label(for='exampleTextarea') Message
+                textarea#exampleTextarea.form-control(rows='3')
+
+              button.btn.btn-primary(type='button') Save
+              
+block specific-js
+  // Data table plugin
+//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
+//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
+//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
+//-   script(type='text/javascript', src='/js/pages/lead-management/index.js')

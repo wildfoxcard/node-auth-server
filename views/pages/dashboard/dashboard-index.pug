@@ -1,0 +1,72 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'dashboard';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-dashboard
+        |  Dashboard
+
+    ul.app-breadcrumb.breadcrumb
+      li.breadcrumb-item
+        i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        a(href='#') Dashboard
+
+  .row
+    .col-md-6.col-lg-3
+      .widget-small.primary.coloured-icon
+        i.icon.fa.fa-users.fa-3x
+        div.info
+          h4.mb-0
+            | New Users
+          small 
+            | (30 days) 
+          p
+            b 5
+
+    .col-md-6.col-lg-3
+      .widget-small.primary.coloured-icon
+        i.icon.fa.fa-users.fa-3x
+        div.info
+          h4.mb-0
+            | Total Users
+          small 
+            a(href="/user-management/") View All
+          p
+            b 125
+
+    .col-md-6.col-lg-3
+      .widget-small.info.coloured-icon
+        i.icon.fa.fa-sign-in.fa-3x
+        div.info
+          h4.mb-0
+            | Unigue Log-ins
+          small 
+            | (30 days) 
+          p
+            b 25
+
+
+    .col-md-6.col-lg-3
+      .widget-small.danger.coloured-icon
+        i.icon.fa.fa-laptop.fa-3x
+        div.info
+          h4.mb-0
+            | Applications
+          small 
+            a(href="/settings/applications/") View All
+          p
+            b 125
+  .row
+    .col-md-12
+      .tile
+        h3.tile-title Special Message
+        p Thank you for using node-auth-server
+        
+
+
+block specific-js

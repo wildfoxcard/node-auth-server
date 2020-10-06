@@ -1,0 +1,78 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'settings';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-cog
+        | Settings
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Settings
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          .row
+            .col-md-3
+              include ../../includes/settings-menu
+
+            .col-md-9
+              h2 Applications
+              br
+              br
+              h3 Client Side
+              p Front end applications that cannot see all users, permissions, or roles. But can see individual users information. The users cannot see other users permissions or roles.
+
+              form
+                .form-group
+                  .input-group
+                    input#exampleInputAmount.form-control(type='text', placeholder='Gatsby Front End')
+                    .input-group-append
+                      button.btn.btn-primary(type='button') Add
+
+
+              table.table
+                tbody
+                  tr
+                    td Recipes Front End
+                    td 
+                      a.float-right(href="#") Edit
+                    td 
+                      a.float-right(href="#") Delete
+              h3 Server Side
+              p Back end applications that can view all data.
+
+              form
+                .form-group
+                  .input-group
+                    input#exampleInputAmount.form-control(type='text', placeholder='Data Server 1')
+                    .input-group-append
+                      button.btn.btn-primary(type='button') Add
+
+
+              table.table
+                tbody
+                  tr
+                    td Recipes Api
+                    td 
+                      a.float-right(href="#") Edit
+                    td 
+                      a.float-right(href="#") Delete
+
+
+block specific-js
+  // Data table plugin
+//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
+//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
+//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
+//-   script(type='text/javascript', src='/js/pages/lead-management/index.js')
