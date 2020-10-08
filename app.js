@@ -233,7 +233,7 @@ app.get("/settings/cors/", passportConfig.isAuthenticated, settingsController.ge
 app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
 app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
 app.get("/settings/privacy-policy/", passportConfig.isAuthenticated, settingsController.getPrivacyPolicy);
-app.get("/settings/third-parties/", passportConfig.isAuthenticated, settingsController.getThirdParties);
+app.get("/settings/imports-exports/", passportConfig.isAuthenticated, settingsController.getImportExports);
 
 /**
  * API examples routes.

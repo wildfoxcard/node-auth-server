@@ -39,8 +39,8 @@ exports.getPrivacyPolicy = (req, res) => {
   });
 };
 
-exports.getThirdParties = (req, res) => {
-  res.render("pages/settings/settings-third-parties", {
+exports.getImportExports = (req, res) => {
+  res.render("pages/settings/settings-imports-exports", {
     title: "Third Parties | Settings",
   });
 };
