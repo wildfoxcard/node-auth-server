@@ -716,11 +716,46 @@ refresh.use('quickbooks', quickbooksStrategyConfig);
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
+  //mvc
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+
+  //api
+  if (req.headers["authorization"] && req.user) {
+    return next();
+  }
+  
+  if (req.path.substr(0, 4) === "/api") {
+    res.status(401).json({
+      success: false,
+      message: "Authentication token missing"
+    })
+  } else {
+    res.redirect('/login');
+  }
 };
+
+exports.isRootAdmin = (req, res, next) => {
+  //mvc
+  if (req.isAuthenticated() && req.user.isRootAdmin) {
+    return next();
+  }
+
+  //api
+  if (req.headers["authorization"] && req.user && req.user.isRootAdmin) {
+    return next();
+  }
+  
+  if (req.path.substr(0, 4) === "/api") {
+    res.status(401).json({
+      success: false,
+      message: "Authentication token missing"
+    })
+  } else {
+    res.redirect('/login');
+  }
+}
 
 /**
  * Authorization Required middleware.

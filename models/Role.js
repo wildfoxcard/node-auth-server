@@ -3,19 +3,17 @@ const mongoose = require("mongoose");
 const roleSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
     permissions: [
       {
-        permission: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Permission",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: "Permission",
       },
     ],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

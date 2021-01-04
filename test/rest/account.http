@@ -1,0 +1,12 @@
+@host = http://localhost:8080
+
+POST {{host}}/api/v1/account/login
+content-type: application/json
+
+{
+    "email": "daffyduck@acme.com",
+    "password": "ASDFasdf"
+}
+
+###
+

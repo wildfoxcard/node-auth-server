@@ -5,9 +5,13 @@ const permissionSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      // required: true,
       ref: "User",
     },
+    isDeleted: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );

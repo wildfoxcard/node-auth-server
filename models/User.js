@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
-  password: String,
+  password: { type: String, select: false },
   passwordResetToken: String,
   passwordResetExpires: Date,
   emailVerificationToken: String,
@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
   twitch: String,
   quickbooks: String,
   tokens: Array,
+  isDeleted: {
+    type: Boolean,
+    default: false
+  },
 
   profile: {
     name: String,
@@ -29,7 +33,24 @@ const userSchema = new mongoose.Schema({
     location: String,
     website: String,
     picture: String
-  }
+  },
+
+  permissions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "Permission",
+    },
+  ],
+
+
+  roles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "Role",
+    },
+  ],
 }, { timestamps: true });
 
 /**

@@ -18,6 +18,9 @@ const passport = require("passport");
 const expressStatusMonitor = require("express-status-monitor");
 const sass = require("node-sass-middleware");
 const multer = require("multer");
+const jwt = require('./config/jwt');
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express")
 
 const upload = multer({ dest: path.join(__dirname, "uploads") });
 
@@ -36,6 +39,25 @@ const rolesController = require("./controllers/pages/roles");
 const userManagementController = require("./controllers/pages/user-management");
 const settingsController = require("./controllers/pages/settings");
 const userController = require("./controllers/user");
+
+/**
+ * Swagger configuration. https://swagger.io/specification/#infoObject
+ */
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'Auth API',
+      description: "This documentation is for JSON APIs. GraphQL is currectly not support.",
+      contact: {
+        name: "Wild Fox Card"
+      },
+      servers:["http://localhost:8080"],
+    }
+  },
+  apis: ['./controllers/*.js', './controllers/pages/*.js']
+}
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
 /**
  * API keys and Passport configuration.
@@ -96,9 +118,10 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(jwt.authenticateToken);
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === "/api/upload") {
+  if (req.path === "/api/upload" || req.path.substr(0, 4) === "/api") {
     // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
     next();
   } else {
@@ -165,6 +188,36 @@ app.use(
   })
 );
 app.use(
+  "/js/lib",
+  express.static(path.join(__dirname, "node_modules/datatables.net-bs4/js"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
+  "/js/lib",
+  express.static(path.join(__dirname, "node_modules/datatables.net/js"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
+  "/js/lib",
+  express.static(path.join(__dirname, "node_modules/datatables.net-buttons-bs4/js"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
+  "/css/lib",
+  express.static(path.join(__dirname, "node_modules/datatables.net-bs4/css"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
+  "/css/lib",
+  express.static(path.join(__dirname, "node_modules/datatables.net-buttons-bs4/css"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
   "/webfonts",
   express.static(
     path.join(__dirname, "node_modules/@fortawesome/fontawesome-free/webfonts"),
@@ -217,15 +270,69 @@ app.get(
 );
 
 /**
+ * API Accounts.
+ */
+app.post('/api/v1/account/login', userController.apiPostLogin)
+
+/**
  * Primary app routes.
  */
 app.get("/dashboard", passportConfig.isAuthenticated, dashboardController.getIndex);
+
 app.get("/roles/", passportConfig.isAuthenticated, rolesController.getIndex);
 app.get("/roles/form/", passportConfig.isAuthenticated, rolesController.getForm);
-app.get("/permissions/", passportConfig.isAuthenticated, permissionsController.getIndex);
-app.get("/permissions/form/", passportConfig.isAuthenticated, permissionsController.getForm);
+// roles api
+app.get('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.getManyForm); 
+app.post('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.postManyForm); 
+app.put('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.putManyForm); 
+app.delete('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.deleteManyForm);
+
+app.get('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.getSingleForm); 
+app.post('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.postSingleForm); 
+app.put('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.putSingleForm); 
+app.delete('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.deleteSingleForm);
+
+app.post('/api/v1/roles/:_id/permissions', passportConfig.isAuthenticated, rolesController.postSingleAddPermissionToRole); 
+app.delete('/api/v1/roles/:_id/permissions/:_permissionsId', passportConfig.isAuthenticated, rolesController.deleteSinglePermissionInArrayForRole);
+
+
+
+
+app.get("/permissions/", passportConfig.isAuthenticated, permissionsController.viewIndex);
+app.get("/permissions/form/", passportConfig.isAuthenticated, permissionsController.viewForm);
+// permisions api
+app.get('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.getManyForm); 
+app.post('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.postManyForm); 
+app.put('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.putManyForm); 
+app.delete('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.deleteManyForm);
+
+app.get('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.getSingleForm); 
+app.post('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.postSingleForm); 
+app.put('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.putSingleForm); 
+app.delete('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.deleteSingleForm);
+
+
 app.get("/user-management/", passportConfig.isAuthenticated, userManagementController.getIndex);
 app.get("/user-management/form/", passportConfig.isAuthenticated, userManagementController.getForm);
+// user api
+app.get('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.getManyForm); 
+app.post('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.postManyForm); 
+app.put('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.putManyForm); 
+app.delete('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.deleteManyForm);
+
+app.get('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.getSingleForm); 
+app.post('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.postSingleForm); 
+app.put('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.putSingleForm); 
+app.delete('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.deleteSingleForm);
+
+app.post('/api/v1/users/:_id/permissions', passportConfig.isAuthenticated, userManagementController.postSingleAddPermissionToUser); 
+app.delete('/api/v1/users/:_id/permissions/:_permissionsId', passportConfig.isAuthenticated, userManagementController.deleteSinglePermissionInArrayForUser);
+
+
+app.post('/api/v1/users/:_id/roles', passportConfig.isAuthenticated, userManagementController.postSingleAddRoleToUser); 
+app.delete('/api/v1/users/:_id/roles/:_rolesId', passportConfig.isAuthenticated, userManagementController.deleteSingleRoleInArrayForUser);
+
+
 
 app.get("/settings/", passportConfig.isAuthenticated, settingsController.getIndex);
 app.get("/settings/applications/", passportConfig.isAuthenticated, settingsController.getApplications);
@@ -234,6 +341,9 @@ app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsCo
 app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
 app.get("/settings/privacy-policy/", passportConfig.isAuthenticated, settingsController.getPrivacyPolicy);
 app.get("/settings/imports-exports/", passportConfig.isAuthenticated, settingsController.getImportExports);
+
+// docs
+app.use('/docs/rest-api', passportConfig.isAuthenticated, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 /**
  * API examples routes.

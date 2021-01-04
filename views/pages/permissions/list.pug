@@ -27,15 +27,19 @@ block content
           a.btn.btn-primary(href="/permissions/form") New Permission
         .tile-body
           .table-responsive
-            table.table.table-hover.table-bordered#leadManagementTable
+            table.table.table-hover.table-bordered#permissionsList
               thead
                 tr
                   th Permission
                   th Action
 
+block head
+  link(rel='stylesheet', type='text/css', href='/css/lib/dataTables.bootstrap4.min.css')
+  link(rel='stylesheet', type='text/css', href='/css/lib/buttons.bootstrap4.min.css')
+
 block specific-js
   // Data table plugin
-//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
-//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
-//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
+  script(type='text/javascript', src="/js/lib/jquery.dataTables.min.js")
+  script(type='text/javascript', src="/js/lib/dataTables.bootstrap4.min.js")
+  script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
 //-   script(type='text/javascript', src='/js/pages/lead-management/index.js')

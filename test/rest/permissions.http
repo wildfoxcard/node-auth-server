@@ -1,0 +1,15 @@
+@host = http://localhost:8080
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjk5NmY1YWU3MzQyNDAxZmQ4OTQ0YzEiLCJpYXQiOjE2MDM4OTQ3NjgsImV4cCI6MTYwMzg5NjU2OH0.1mc9ArC-IVN89DJhGJ_pxfMiWkDy_Sr6a4STs7iAhj4
+
+GET {{host}}/api/v1/permissions
+Authorization: bearer {{token}}
+
+###
+POST {{host}}/api/v1/permissions
+Authorization: bearer {{token}}
+content-type: application/json
+
+{
+    "name": "test1"
+}
+
