@@ -1,3 +1,80 @@
+//- extends ../../layouts/_layout
+
+//- block variables
+//-   - var activePage = 'roles';
+
+//- //- block specific-js
+//- //-   script(type='text/javascript', src='/js/pages/lead-management/form.js')
+//- //-   if id
+//- //-     script.
+//- //-       $(function() {
+//- //-         app.loadLeadForm('#{id}');
+//- //-       })
+
+//- block content
+//-   if id
+//-     input#_id(type="hidden" value=id)
+//-   .app-title
+//-     div
+//-       h1
+//-         i.fa.fa-object-group
+//-         if id 
+//-           | Edit Role
+//-         else
+//-           | New Role
+
+//-   .row
+//-     .col-md-12
+//-       .tile
+//-         form( autocomplete="off", id="role_form")
+//-           .tile-body
+//-               .form-group
+//-                   label.col-form-label(for='inputDefault') Name
+//-                   input#name.form-control(type='text'  value=data ? data.name : "")
+
+//-           .tile-footer
+//-                   button#submit-lead.btn.btn-primary(type='submit') Save
+//-   if id                
+//-     .row
+//-       .col-md-12
+//-         .tile.danger-top
+//-           .page-header
+//-             .row
+//-               .col-lg-12
+//-                 h2.mb-3.line-head#buttons Danger Zone
+//-             .row
+//-               .col-lg-12
+//-                 button.btn.btn-danger.pull-right(data-toggle="modal" data-target="#delete-lead") Delete
+//-                 p 
+//-                   strong Delete Role 
+//-                   | - This role will not be visible to anyone but database developers. 
+
+//-     .modal#delete-lead(tabindex="-1" role="dialog")
+//-       .modal-dialog(role='document')
+//-         .modal-content
+//-           .modal-header.bg-danger.text-light
+//-             h5.modal-title DELETE ROLE
+//-             button.close(type='button', data-dismiss='modal', aria-label='Close')
+//-               span(aria-hidden='true') ×
+//-           .modal-body
+//-             .form-group.has-danger
+//-               label.form-control-label(for='inputDanger1') 
+//-                 | You are about to delete a role. Please enter 
+//-                 strong "delete-
+//-                   span.deleteRole=data.name
+//-                   | " 
+//-                 | in the input below
+//-               input#delete-lead-input.form-control.is-invalid(type='text')
+//-             //- p You are about to block the lead from services. Please enter 
+//-             //-   strong "delete - 
+//-             //-     span.lead-email
+//-             //-     | " 
+//-             //-   | in the input below
+//-           .modal-footer
+//-             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+//-             div.btn.btn-danger(onclick="app.roles.delete()" disabled) Delete Role
+        
+            
 extends ../../layouts/_layout
 
 block variables
@@ -12,6 +89,8 @@ block variables
 //-       })
 
 block content
+  if id
+    input#_id(type="hidden" value=id)
   .app-title
     div
       h1
@@ -24,14 +103,14 @@ block content
   .row
     .col-md-12
       .tile
-        form( autocomplete="off", id="lead_form")
+        form( autocomplete="off", id="role_form")
           .tile-body
               .form-group
                   label.col-form-label(for='inputDefault') Name
-                  input#name.form-control(type='text')
+                  input#name.form-control(type='text' value=data ? data.name : "")
 
           .tile-footer
-                  button#submit-lead.btn.btn-primary(type='submit') Submit
+                  button#submit-lead.btn.btn-primary(type='submit') Save
   if id                
     .row
       .col-md-12
@@ -47,57 +126,32 @@ block content
                   strong Delete Role 
                   | - This role will not be visible to anyone but database developers. 
 
-    .modal#block-lead(tabindex="-1" role="dialog")
-      .modal-dialog(role='document')
-        .modal-content
-          .modal-header.bg-danger.text-light
-            h5.modal-title BLOCK USER
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-          .modal-body
-            //- p You are about to block the lead from services. Please enter 
-            //-   strong "block - 
-            //-     span.lead-email
-            //-     | " 
-            //-   | in the input below
-              
-            .form-group.has-danger
-              label.form-control-label(for='inputDanger1') 
-                |You are about to block the lead from services. Please enter 
-                strong
-                  span.block-or-unblocked 
-                    | "block-
-                  span.lead-email
-                  | " 
-                | in the input below
-              input#block-lead-input.form-control.is-invalid(type='text')
-          .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            div.btn.btn-danger( onclick="app.blockLead()") Block Lead
-            
     .modal#delete-lead(tabindex="-1" role="dialog")
       .modal-dialog(role='document')
         .modal-content
           .modal-header.bg-danger.text-light
-            h5.modal-title DELETE USER
+            h5.modal-title DELETE PERMISSION
             button.close(type='button', data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') ×
           .modal-body
             .form-group.has-danger
               label.form-control-label(for='inputDanger1') 
-                | You are about to block the lead from services. Please enter 
+                | You are about to delete a role. Please enter 
                 strong "delete-
-                  span.lead-email
+                  span#deleteRole=data.name 
                   | " 
                 | in the input below
-              input#delete-lead-input.form-control.is-invalid(type='text')
+              input#userInputDeleteRole.form-control.is-invalid(type='text')
             //- p You are about to block the lead from services. Please enter 
             //-   strong "delete - 
             //-     span.lead-email
             //-     | " 
             //-   | in the input below
           .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            div.btn.btn-danger( onclick="app.deleteLead()") Delete Lead
+            button.btn(type='button', data-dismiss='modal') Cancel
+            div.btn.btn-secondary#submitDeleteRole(onclick="app.roles.delete()" disabled) Delete Role
         
             
+
+block specific-js
+  script(type='text/javascript', src='/js/views/pages/roles/form.js')

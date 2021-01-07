@@ -28,6 +28,11 @@ html(lang="en")
 		include ../includes/_head.pug
 
 		block head
+
+		
+		script(type="text/javascript").
+			let app = {};
+			
 	body.app.sidebar-mini
 
 		// Navbar
@@ -44,6 +49,7 @@ html(lang="en")
 		
 		// Page specific javascripts
 		block specific-js
+
 
 		// Google analytics script
 		script(type="text/javascript").

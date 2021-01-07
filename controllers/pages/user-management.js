@@ -95,10 +95,17 @@ exports.getIndex = (req, res) => {
   });
 };
 
-exports.getForm = (req, res) => {
+exports.getForm = async (req, res) => {
+  let data;
+
+  if (req.query.id) {
+    data = await UserModel.findById(req.query.id);
+  }
+
   res.render("pages/user-management/form", {
     title: "Form | User Management",
     id: req.query.id,
+    data
   });
 };
 

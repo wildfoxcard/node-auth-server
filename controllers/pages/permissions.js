@@ -21,16 +21,23 @@
 const PermissionModel = require("../../models/Permission");
 const { errorReporter } = require("../../config/errorReporter");
 
-exports.viewIndex = (req, res) => {
+exports.viewIndex = async (req, res) => {
   res.render("pages/permissions/list", {
     title: "Permissions",
   });
 };
 
-exports.viewForm = (req, res) => {
+exports.viewForm = async (req, res) => {
+  let data;
+
+  if (req.query.id) {
+    data = await PermissionModel.findById(req.query.id);
+  }
+
   res.render("pages/permissions/form", {
     title: "Form | Permissions",
     id: req.query.id,
+    data
   });
 };
 
@@ -420,6 +427,8 @@ exports.postSingleForm = async (req, res) => {
 exports.putSingleForm = async (req, res) => {
   const { body } = req;
   const { _id } = req.params;
+
+  console.log("body", body)
 
   if (!body) {
     return res.json({

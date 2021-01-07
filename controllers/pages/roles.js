@@ -32,10 +32,17 @@ exports.getIndex = (req, res) => {
   });
 };
 
-exports.getForm = (req, res) => {
+exports.getForm = async (req, res) => {
+  let data;
+
+  if (req.query.id) {
+    data = await RoleModel.findById(req.query.id);
+  }
+
   res.render("pages/roles/form", {
     title: "Form | Roles",
     id: req.query.id,
+    data
   });
 };
 

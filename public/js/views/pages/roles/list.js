@@ -1,9 +1,9 @@
 $(function () {
   console.log('running...')
-    $("#permissionsList").DataTable({
+    $("#rolesTable").DataTable({
       sDom: "t",
       ajax: {
-        url: "/api/v1/permissions",
+        url: "/api/v1/roles",
         type: "GET",
         cache: false,
         dataSrc: function (json) {
@@ -20,7 +20,7 @@ $(function () {
           data: null,
           display: "Action",
           render: function (data, type, row, meta) {
-            return `<a class="btn btn-warning" href="/permissions/form?id=${row._id}">Edit</a>`;
+            return `<a class="btn btn-warning" href="/roles/form?id=${row._id}">Edit</a>`;
           },
         },
       ],

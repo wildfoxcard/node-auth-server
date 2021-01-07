@@ -12,6 +12,8 @@ block variables
 //-       })
 
 block content
+  if id
+    input#_id(type="hidden" value=id)
   .app-title
     div
       h1
@@ -24,14 +26,14 @@ block content
   .row
     .col-md-12
       .tile
-        form( autocomplete="off", id="lead_form")
+        form( autocomplete="off", id="permission_form")
           .tile-body
               .form-group
                   label.col-form-label(for='inputDefault') Name
-                  input#name.form-control(type='text')
+                  input#name.form-control(type='text' value=data ? data.name : "")
 
           .tile-footer
-                  button#submit-lead.btn.btn-primary(type='submit') Submit
+                  button#submit-lead.btn.btn-primary(type='submit') Save
   if id                
     .row
       .col-md-12
@@ -47,57 +49,32 @@ block content
                   strong Delete Permission 
                   | - This permission will not be visible to anyone but database developers. 
 
-    .modal#block-lead(tabindex="-1" role="dialog")
-      .modal-dialog(role='document')
-        .modal-content
-          .modal-header.bg-danger.text-light
-            h5.modal-title BLOCK USER
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-          .modal-body
-            //- p You are about to block the lead from services. Please enter 
-            //-   strong "block - 
-            //-     span.lead-email
-            //-     | " 
-            //-   | in the input below
-              
-            .form-group.has-danger
-              label.form-control-label(for='inputDanger1') 
-                |You are about to block the lead from services. Please enter 
-                strong
-                  span.block-or-unblocked 
-                    | "block-
-                  span.lead-email
-                  | " 
-                | in the input below
-              input#block-lead-input.form-control.is-invalid(type='text')
-          .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            div.btn.btn-danger( onclick="app.blockLead()") Block Lead
-            
     .modal#delete-lead(tabindex="-1" role="dialog")
       .modal-dialog(role='document')
         .modal-content
           .modal-header.bg-danger.text-light
-            h5.modal-title DELETE USER
+            h5.modal-title DELETE PERMISSION
             button.close(type='button', data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') ×
           .modal-body
             .form-group.has-danger
               label.form-control-label(for='inputDanger1') 
-                | You are about to block the lead from services. Please enter 
+                | You are about to delete a permission. Please enter 
                 strong "delete-
-                  span.lead-email
+                  span#deletePermission=data.name 
                   | " 
                 | in the input below
-              input#delete-lead-input.form-control.is-invalid(type='text')
+              input#userInputDeletePermission.form-control.is-invalid(type='text')
             //- p You are about to block the lead from services. Please enter 
             //-   strong "delete - 
             //-     span.lead-email
             //-     | " 
             //-   | in the input below
           .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            div.btn.btn-danger( onclick="app.deleteLead()") Delete Lead
+            button.btn(type='button', data-dismiss='modal') Cancel
+            div.btn.btn-secondary#submitDeletePermission(onclick="app.permissions.delete()" disabled) Delete Permission
         
             
+
+block specific-js
+  script(type='text/javascript', src='/js/views/pages/permissions/form.js')
