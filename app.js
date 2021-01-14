@@ -206,6 +206,18 @@ app.use(
   })
 );
 app.use(
+  "/js/lib",
+  express.static(path.join(__dirname, "node_modules/bootstrap-notify"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
+  "/js/lib",
+  express.static(path.join(__dirname, "node_modules/sweetalert/dist"), {
+    maxAge: 31557600000,
+  })
+);
+app.use(
   "/css/lib",
   express.static(path.join(__dirname, "node_modules/datatables.net-bs4/css"), {
     maxAge: 31557600000,

@@ -1,5 +1,4 @@
 $(function () {
-  console.log('running...')
     $("#rolesTable").DataTable({
       sDom: "t",
       ajax: {

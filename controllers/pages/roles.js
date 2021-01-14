@@ -42,7 +42,7 @@ exports.getForm = async (req, res) => {
   res.render("pages/roles/form", {
     title: "Form | Roles",
     id: req.query.id,
-    data
+    data,
   });
 };
 
@@ -385,7 +385,9 @@ exports.getSingleForm = async (req, res) => {
     const role = await RoleModel.findOne({
       _id,
       isDeleted: { $ne: true },
-    }).populate("permissions").exec();
+    })
+      .populate("permissions")
+      .exec();
 
     res.json({
       success: true,
@@ -642,7 +644,7 @@ exports.deleteSinglePermissionInArrayForRole = async (req, res) => {
 
     const newRole = await RoleModel.findOneAndUpdate(
       { _id: _roleId },
-      { $pull: { permissions: { _id: _permissionId } } },
+      { $pull: { permissions: _permissionId } },
       { new: true }
     );
 
