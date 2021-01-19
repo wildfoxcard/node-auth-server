@@ -14,93 +14,173 @@ block content
           | Edit User
         else
           | New User
-
+  if user.isBlocked
+    .row
+      .col-md-12
+        h3.text-danger USER IS BLOCKED 
+    .row
+      .col-md-12
+        .tile.bg-danger.text-white
+          | This user cannot sign in. 
+  .row
+    .col-md-12
+      h3 General 
   .row
     .col-md-12
       .tile
+        .overlay#generalLoading
+          .m-loader.mr-4
+            svg.m-circular(viewbox='25 25 50 50')
+              circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+          h3.l-text Loading 
         form( autocomplete="off", id="user_form")
           .tile-body
               .form-group
                   label.col-form-label(for='inputDefault') Email
                   input#email.form-control(type='text' value=data ? data.email : "")
-
           .tile-footer
                   button#submit-lead.btn.btn-primary(type='submit') Save
-    if id                
+  if id
+  
     .row
       .col-md-12
-        .tile.danger-top
-          .page-header
-            .row
-              .col-lg-12
-                h2.mb-3.line-head#buttons Danger Zone
-            .row.pt-1.pb-1
-              .col-lg-12
-                button.btn.btn-danger.pull-right(data-toggle="modal" data-target="#block-user") Block
-                p 
-                  h3 Block User 
-                  | This user will not have access to services. 
-            hr
-            .row.pt-1.pb-1
-              .col-lg-12
-                button.btn.btn-danger.pull-right(data-toggle="modal" data-target="#delete-user") Delete
-                p 
-                  h3 Delete User 
-                  | This user will not be visible to anyone but database developers. 
+        h3 Roles 
+    .row
+      .col-md-12
+        .tile
+          .overlay#rolesLoading
+            .m-loader.mr-4
+              svg.m-circular(viewbox='25 25 50 50')
+                circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+            h3.l-text Loading 
+            
+          .tile-body 
+            div.btn.btn-secondary.mb-2(data-toggle="modal" data-target="#addRoles" onclick="app.users.refreshSelectRolesDropdown(currentlySelectedRoles)") Add Roles
+            .table-responsive
+              table.table.table-hover.table-bordered#rolesInUserTable
+                thead
+                  tr
+                    th Role
+                    th Delete
+        
+    .row
+      .col-md-12
+        h3 Permissions 
+    .row
+      .col-md-12
+        .tile
+          .overlay#permissionsLoading
+            .m-loader.mr-4
+              svg.m-circular(viewbox='25 25 50 50')
+                circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+            h3.l-text Loading 
+          .tile-body 
+            .table-responsive
+              table.table.table-hover.table-bordered#permissionsInUserTable
+                thead
+                  tr
+                    th Toggle
+                    th Permission
+                    th Role using permission.
 
-              .modal#block-user(tabindex="-1" role="dialog")
-                .modal-dialog(role='document')
-                  .modal-content
-                    .modal-header.bg-danger.text-light
-                      h5.modal-title BLOCK USER
-                      button.close(type='button', data-dismiss='modal', aria-label='Close')
-                        span(aria-hidden='true') ×
-                    .modal-body
-                      //- p You are about to block the lead from services. Please enter 
-                      //-   strong "block - 
-                      //-     span.lead-email
-                      //-     | " 
-                      //-   | in the input below
-                        
-                      .form-group.has-danger
-                        label.form-control-label(for='inputDanger1') 
-                          |You are about to block the user from services. Please enter 
-                          strong
-                            span.block-or-unblocked 
-                              | "block-
-                            span.blockUser=data.email
-                            | " 
-                          | in the input below
-                        input#block-lead-input.form-control.is-invalid(type='text')
-                    .modal-footer
-                      button.btn(type='button', data-dismiss='modal') Cancel
-                      div.btn.btn-secondary( onclick="app.user.block()") Block User
-                      
-              .modal#delete-user(tabindex="-1" role="dialog")
-                .modal-dialog(role='document')
-                  .modal-content
-                    .modal-header.bg-danger.text-light
-                      h5.modal-title DELETE USER
-                      button.close(type='button', data-dismiss='modal', aria-label='Close')
-                        span(aria-hidden='true') ×
-                    .modal-body
-                      .form-group.has-danger
-                        label.form-control-label(for='inputDanger1') 
-                          | You are about to delete a user, this action is recoverable from the database. Please enter 
-                          strong "delete-
-                            span#deleteUser=data.email
-                            | " 
-                          | in the input below
-                        input#userInputDeleteUser.form-control.is-invalid(type='text')
-                      //- p You are about to block the lead from services. Please enter 
-                      //-   strong "delete - 
-                      //-     span.lead-email
-                      //-     | " 
-                      //-   | in the input below
-                    .modal-footer
-                      button.btn(type='button', data-dismiss='modal') Cancel
-                      div.btn.btn-secondary#submitDeleteUser( onclick="app.users.delete()") Delete User
+    .row
+      .col-md-12
+        h3 Danger Zone                
+    .row
+      .col-md-12
+        .tile
+          .overlay#dangerLoading
+            .m-loader.mr-4
+              svg.m-circular(viewbox='25 25 50 50')
+                circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+            h3.l-text Loading 
+          .tile-body 
+            button.btn.btn-danger.pull-right(data-toggle="modal" data-target="#block-user") Block
+            p 
+              h3 Block User 
+              | This user will not have access to services. 
+            button.btn.btn-danger.pull-right(data-toggle="modal" data-target="#delete-user") Delete
+            p 
+              h3 Delete User 
+              | This user will not be visible to anyone but database developers. 
+   
+    .modal#addRoles(tabindex="-1" role="dialog")
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header.bg-secondary.text-light
+            h5.modal-title ADD ROLES
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+
+            .form-group
+              .tile
+                .tile-title-w-btn
+                  h3.title 
+                    select#availableRoles.form-control
+                  p
+                    div.btn.btn-primary.icon-btn( onclick="app.users.addRoles()")
+                      i.fa.fa-plus
+                      | Add
+                .tile-body#roleTags
                   
+          .modal-footer
+            button.btn(type='button', data-dismiss='modal') Cancel
+            div.btn.btn-success#submitDeleteRole(onclick="app.users.submitNewRolesToAdd()") Add Roles
+          
+    .modal#block-user(tabindex="-1" role="dialog")
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header.bg-danger.text-light
+            h5.modal-title BLOCK USER
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            //- p You are about to block the lead from services. Please enter 
+            //-   strong "block - 
+            //-     span.lead-email
+            //-     | " 
+            //-   | in the input below
+              
+            .form-group.has-danger
+              label.form-control-label(for='inputDanger1') 
+                |You are about to block the user from services. Please enter 
+                strong
+                  span.block-or-unblocked 
+                    | "block-
+                  span#blockUser=data.email
+                  | " 
+                | in the input below
+              input#userInputBlockUser.form-control.is-invalid(type='text')
+          .modal-footer
+            button.btn(type='button', data-dismiss='modal') Cancel
+            div#submitBlockUser.btn.btn-secondary( onclick="app.users.block()") Block User
+            
+    .modal#delete-user(tabindex="-1" role="dialog")
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header.bg-danger.text-light
+            h5.modal-title DELETE USER
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            .form-group.has-danger
+              label.form-control-label(for='inputDanger1') 
+                | You are about to delete a user, this action is recoverable from the database. Please enter 
+                strong "delete-
+                  span#deleteUser=data.email
+                  | " 
+                | in the input below
+              input#userInputDeleteUser.form-control.is-invalid(type='text')
+            //- p You are about to block the lead from services. Please enter 
+            //-   strong "delete - 
+            //-     span.lead-email
+            //-     | " 
+            //-   | in the input below
+          .modal-footer
+            button.btn(type='button', data-dismiss='modal') Cancel
+            div.btn.btn-secondary#submitDeleteUser( onclick="app.users.delete()") Delete User
+        
 
             //- extends ../../layouts/_layout
 
@@ -162,7 +242,24 @@ block content
 
 
               
-            
+      
+block head
+  link(rel='stylesheet', type='text/css', href='/css/lib/dataTables.bootstrap4.min.css')
+  link(rel='stylesheet', type='text/css', href='/css/lib/buttons.bootstrap4.min.css')
+      
 
 block specific-js
-  script(type='text/javascript', src='/js/views/pages/user-management/form.js')
+  // Data table plugin
+  script.
+    app.users = {};
+    app.users.data = {};
+  if id
+    script.
+      app.users.data._id = "#{id}";
+  script(type='text/javascript', src="/js/lib/jquery.dataTables.min.js")
+  script(type='text/javascript', src="/js/lib/dataTables.bootstrap4.min.js")
+  script(type='text/javascript', src="/js/lib/buttons.bootstrap4.min.js")
+  script(type='text/javascript', src='/js/views/pages/user-management/form.general.js')
+  if id
+    script(type='text/javascript', src='/js/views/pages/user-management/form.permissions.roles.js')
+    script(type='text/javascript', src='/js/views/pages/user-management/form.danger.js')

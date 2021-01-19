@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   emailVerificationToken: String,
   emailVerified: Boolean,
   isAdmin: Boolean,
+  isBlocked: Boolean,
 
   snapchat: String,
   facebook: String,

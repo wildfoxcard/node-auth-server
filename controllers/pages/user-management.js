@@ -105,7 +105,7 @@ exports.getForm = async (req, res) => {
   res.render("pages/user-management/form", {
     title: "Form | User Management",
     id: req.query.id,
-    data
+    data,
   });
 };
 
@@ -152,7 +152,16 @@ exports.getManyForm = async (req, res) => {
       };
     }
 
-    const users = await UserModel.find(queryObj).populate("permissions").exec();
+    const users = await UserModel.find(queryObj)
+      .populate("permissions")
+      // .populate('roles')
+      .populate({
+        path: "roles",
+        populate: {
+          path: "permissions",
+        },
+      })
+      .exec();
 
     res.json({
       success: true,
@@ -202,8 +211,6 @@ exports.postManyForm = async (req, res) => {
     if (req.body.password !== req.body.confirmPassword) {
       validationErrors.push({ msg: "Passwords do not match" });
     }
-
-    console.log("validationErrors", validationErrors);
 
     if (validationErrors.length) {
       req.flash("errors", validationErrors);
@@ -366,7 +373,7 @@ exports.putManyForm = async (req, res) => {
       await UserModel.updateOne(
         { _id: user._id },
         {
-          $set: user
+          $set: user,
         }
       );
     }
@@ -450,7 +457,6 @@ exports.deleteManyForm = async (req, res) => {
     for (var i = 0; i < users.length; i++) {
       const user = users[0];
 
-      console.log("user", user);
       await UserModel.updateOne(
         { _id: user._id },
         {
@@ -501,7 +507,14 @@ exports.getSingleForm = async (req, res) => {
       isDeleted: { $ne: true },
     })
       .populate("permissions")
-      .populate("roles")
+      // .populate({path: 'roles', model: permissions})
+      // .populate('roles')
+      .populate({
+        path: "roles",
+        populate: {
+          path: "permissions",
+        },
+      })
       .exec();
 
     res.json({
@@ -751,8 +764,6 @@ exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
   const _permissionId = req.params._permissionsId;
   const _userId = req.params._id;
 
-  console.log('keys', _userId, _permissionId)
-
   try {
     const usersWithSameId = await UserModel.findById(_userId);
 
@@ -765,10 +776,9 @@ exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
 
     const newUser = await UserModel.findOneAndUpdate(
       { _id: _userId },
-      { $pull: { permissions:  _permissionId } },
+      { $pull: { permissions: _permissionId } },
       { new: true }
     );
-    console.log('hit')
 
     res.json({
       success: true,
@@ -890,8 +900,6 @@ exports.deleteSingleRoleInArrayForUser = async (req, res) => {
   const _roleId = req.params._rolesId;
   const _userId = req.params._id;
 
-  console.log('keys', _roleId, _userId)
-
   try {
     const usersWithSameId = await UserModel.findById(_userId);
 
@@ -904,7 +912,7 @@ exports.deleteSingleRoleInArrayForUser = async (req, res) => {
 
     const newUser = await UserModel.findOneAndUpdate(
       { _id: _userId },
-      { $pull: { roles:  _roleId  } },
+      { $pull: { roles: _roleId } },
       { new: true }
     );
 
