@@ -63,6 +63,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions)
  * API keys and Passport configuration.
  */
 const passportConfig = require("./config/passport");
+const Settings = require("./models/Settings");
 
 /**
  * Create Express server.
@@ -85,6 +86,15 @@ mongoose.connection.on("error", (err) => {
   );
   process.exit();
 });
+
+//create settings if doesn't exist.
+(async () => {
+  if (await Settings.countDocuments() <= 0) {
+    const settings = new Settings();
+  
+    await settings.save();
+  }
+})()
 
 /**
  * Express configuration.
@@ -289,6 +299,7 @@ app.post('/api/v1/account/login', userController.apiPostLogin)
 /**
  * Primary app routes.
  */
+app.get("/", passportConfig.isAuthenticated, dashboardController.getIndex);
 app.get("/dashboard", passportConfig.isAuthenticated, dashboardController.getIndex);
 
 app.get("/roles/", passportConfig.isAuthenticated, rolesController.getIndex);
@@ -345,14 +356,42 @@ app.post('/api/v1/users/:_id/roles', passportConfig.isAuthenticated, userManagem
 app.delete('/api/v1/users/:_id/roles/:_rolesId', passportConfig.isAuthenticated, userManagementController.deleteSingleRoleInArrayForUser);
 
 
+//settings api
+app.get("/settings/", passportConfig.isAuthenticated, settingsController.viewGeneral);
+app.get("/api/v1/settings/general/", passportConfig.isAuthenticated, settingsController.getGeneral);
+app.post("/api/v1/settings/general/", passportConfig.isAuthenticated, settingsController.postGeneral);
 
-app.get("/settings/", passportConfig.isAuthenticated, settingsController.getIndex);
-app.get("/settings/applications/", passportConfig.isAuthenticated, settingsController.getApplications);
-app.get("/settings/cors/", passportConfig.isAuthenticated, settingsController.getCors);
-app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
-app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
-app.get("/settings/privacy-policy/", passportConfig.isAuthenticated, settingsController.getPrivacyPolicy);
-app.get("/settings/imports-exports/", passportConfig.isAuthenticated, settingsController.getImportExports);
+
+app.get("/settings/new-users/", passportConfig.isAuthenticated, settingsController.viewNewUsers);
+app.get("/api/v1/settings/new-users/", passportConfig.isAuthenticated, settingsController.getNewUsers);
+app.post("/api/v1/settings/new-users/", passportConfig.isAuthenticated, settingsController.postNewUsers);
+
+app.get("/settings/exports/", passportConfig.isAuthenticated, settingsController.viewExports);
+app.get("/settings/imports/", passportConfig.isAuthenticated, settingsController.viewImports);
+
+app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.viewEmailTemplates);
+app.get("/api/v1/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
+app.post("/api/v1/settings/email-templates/", passportConfig.isAuthenticated, settingsController.postEmailTemplates);
+
+app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.viewPasswordPolicy);
+app.get("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
+app.post("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.postPasswordPolicy);
+
+
+
+
+
+
+
+// app.get("/settings/applications/", passportConfig.isAuthenticated, settingsController.getApplications);
+// app.get("/settings/cors/", passportConfig.isAuthenticated, settingsController.getCors);
+// app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
+
+// app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
+// app.post("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.postPasswordPolicy);
+
+// // app.get("/settings/privacy-policy/", passportConfig.isAuthenticated, settingsController.getPrivacyPolicy);
+// app.get("/settings/imports-exports/", passportConfig.isAuthenticated, settingsController.getImportExports);
 
 // docs
 app.use('/docs/rest-api', passportConfig.isAuthenticated, swaggerUi.serve, swaggerUi.setup(swaggerDocs))

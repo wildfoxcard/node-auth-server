@@ -21,6 +21,11 @@ block content
   .row
     .col-md-12
       .tile
+        .overlay#settingsGeneralLoading
+          .m-loader.mr-4
+            svg.m-circular(viewbox='25 25 50 50')
+              circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+          h3.l-text Loading 
         .tile-body
           .row
             .col-md-3
@@ -30,14 +35,16 @@ block content
               h2 General
               .form-group
                 label(for='exampleInputEmail1') Company Name
-                input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email')
-                small#emailHelp.form-text.text-muted Used for login screen name.
+                input#companyName.form-control(type='email', aria-describedby='emailHelp', placeholder='Awesome Company LLC')
+                small#emailHelp.form-text.text-muted Used for email templates.
 
-              button.btn.btn-primary(type='button') Save
+              button.btn.btn-primary(type='button' onclick="app.settings.imports.save()") Save
 
 block specific-js
   // Data table plugin
-//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
-//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
-//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
-//-   script(type='text/javascript', src='/js/pages/lead-management/index.js')
+  script.
+    app.settings = {};
+    app.settings.imports = {};
+    app.settings.imports.data = {};
+  script(type='text/javascript', src='/js/views/pages/settings/settings-index.js')
+

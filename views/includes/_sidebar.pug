@@ -42,28 +42,40 @@ aside.app-sidebar
 
 
 
-		//- li.treeview(class={'is-expanded': activeGroup == 'forms'})
-		//- 	a.app-menu__item(href='#' data-toggle='treeview')
-		//- 		i.app-menu__icon.fa.fa-edit
-		//- 		span.app-menu__label Forms
-		//- 		i.treeview-indicator.fa.fa-angle-right
-		//- 	ul.treeview-menu
-		//- 		li
-		//- 			a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
-		//- 				i.icon.fa.fa-circle-o
-		//- 				|  Form Components
-		//- 		li
-		//- 			a.treeview-item(href='form-custom.html' class={'active': activePage == 'form-custom'})
-		//- 				i.icon.fa.fa-circle-o
-		//- 				|  Custom Components
-		//- 		li
-		//- 			a.treeview-item(href='form-samples.html' class={'active': activePage == 'form-samples'})
-		//- 				i.icon.fa.fa-circle-o
-		//- 				|  Form Samples
-		//- 		li
-		//- 			a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
-		//- 				i.icon.fa.fa-circle-o
-		//- 				|  Form Notifications
+		li.treeview(class={'is-expanded': activeGroup == 'forms'})
+			a.app-menu__item(href='#' data-toggle='treeview')
+				i.app-menu__icon.fa.fa-edit
+				span.app-menu__label Documentation
+				i.treeview-indicator.fa.fa-angle-right
+			ul.treeview-menu
+				li
+					a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
+						i.icon.fa.fa-circle-o
+						|  About
+				li
+					a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
+						i.icon.fa.fa-circle-o
+						|  Business Training
+				li
+					a.treeview-item(href='form-custom.html' class={'active': activePage == 'form-custom'})
+						i.icon.fa.fa-circle-o
+						|  Programing Theory
+				li
+					a.treeview-item(href='/docs/rest-api/#/' target="_blank")
+						i.icon.fa.fa-circle-o
+						|  Rest Api
+				li
+					a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
+						i.icon.fa.fa-circle-o
+						|  Hooks
+				li
+					a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
+						i.icon.fa.fa-circle-o
+						|  Maintenance
+				li
+					a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
+						i.icon.fa.fa-circle-o
+						|  Releases
 
 		//- li.treeview(class={'is-expanded': activeGroup == 'tables'})
 		//- 	a.app-menu__item(href='#' data-toggle='treeview')

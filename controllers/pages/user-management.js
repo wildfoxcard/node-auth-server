@@ -2,84 +2,16 @@
  * @swagger
  *
  * definitions:
- *    User:
+ *    SettingsGeneral:
  *        type: "object"
  *        properties:
- *          email:
+ *          companyName:
  *            type: "string"
- *          password:
+ *    SettingsPasswordPolicy:
+ *        type: "object"
+ *        properties:
+ *          companyName:
  *            type: "string"
- *          confirmPassword:
- *            type: "string"
- *          passwordResetToken:
- *            type: "string"
- *          passwordResetExpires:
- *            type: "Date"
- *          emailVerificationToken:
- *            type: "string"
- *          emailVerified:
- *            type: "boolean"
- *          isAdmin:
- *            type: "boolean"
- *          snapchat:
- *            type: "string"
- *          facebook:
- *            type: "string"
- *          twitter:
- *            type: "string"
- *          google:
- *            type: "string"
- *          github:
- *            type: "string"
- *          instagram:
- *            type: "string"
- *          linkedin:
- *            type: "string"
- *          steam:
- *            type: "string"
- *          twitch:
- *            type: "string"
- *          quickbooks:
- *            type: "string"
- *          tokens:
- *            type: "array"
- *            items:
- *              type: "string"
- *          profile:
- *            type: "object"
- *            properties:
- *              name:
- *                type: "string"
- *              gender:
- *                type: "string"
- *              location:
- *                type: "string"
- *              website:
- *                type: "string"
- *              picture:
- *                type: "string"
- *          roles:
- *            type: "array"
- *            items:
- *              type: "object"
- *              properties:
- *                _id:
- *                  type: "string"
- *                name:
- *                  type: "string"
- *          permissions:
- *            type: "array"
- *            items:
- *              type: "object"
- *              properties:
- *                _id:
- *                  type: "string"
- *                name:
- *                  type: "string"
- *                createdAt:
- *                  type: "string"
- *                updatedAt:
- *                  type: "string"
  *
  */
 const validator = require("validator");
