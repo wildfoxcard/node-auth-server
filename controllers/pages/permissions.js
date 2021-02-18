@@ -1,22 +1,3 @@
-/**
- * @swagger
- *
- * definitions:
- *    Permission:
- *        type: "object"
- *        properties:
- *
- *          _id:
- *            type: "string"
- *          name:
- *            type: "string"
- *          createdAt:
- *            type: "string"
- *          updatedAt:
- *            type: "string"
- *
- *
- */
 
 const PermissionModel = require("../../models/Permission");
 const { errorReporter } = require("../../config/errorReporter");

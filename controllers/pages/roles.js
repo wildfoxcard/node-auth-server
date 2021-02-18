@@ -1,27 +1,4 @@
-/**
- * @swagger
- *
- * definitions:
- *    Role:
- *        type: "object"
- *        properties:
- *          _id:
- *            type: "string"
- *          name:
- *            type: "string"
- *          roles:
- *            type: "array"
- *            items:
- *              type: "object"
- *              properties:
- *                _id:
- *                  type: "string"
- *                  required: true
- *                name:
- *                  type: "string"
- *
- *
- */
+
 const RoleModel = require("../../models/Role");
 const PermissionModel = require("../../models/Permission");
 const { errorReporter } = require("../../config/errorReporter");

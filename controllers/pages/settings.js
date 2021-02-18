@@ -1,3 +1,4 @@
+
 const Settings = require("../../models/Settings");
 const { errorReporter } = require("../../config/errorReporter");
 
@@ -155,14 +156,7 @@ exports.postNewUsers = async (req, res) => {
   try {
     const { password, type } = req.body;
 
-    if (type === "PASSWORD" && !password) {
-      return res.json({
-        success: false,
-        message: `Password property is required when type is password. {"type":"PASSWORD", "password": "example"}`,
-      });
-    }
-
-    await Settings.findOneAndUpdate(
+    const newSettings = await Settings.findOneAndUpdate(
       {},
       { newUsers: req.body },
       { upsert: true }
@@ -170,6 +164,7 @@ exports.postNewUsers = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      data: newSettings.newUsers
     });
   } catch (err) {
     errorReporter({

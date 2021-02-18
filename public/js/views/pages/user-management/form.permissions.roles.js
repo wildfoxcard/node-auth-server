@@ -254,8 +254,6 @@ app.users.refreshPermissionsList = () => {
     }
   }
 
-  console.log("copyOfAvailablePermissions", copyOfAvailablePermissions);
-
   $("#permissionsInUserTable").dataTable().fnClearTable();
   copyOfAvailablePermissions.map((per) => {
     $("#permissionsInUserTable").dataTable().fnAddData(per);

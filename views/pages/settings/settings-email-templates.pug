@@ -21,6 +21,11 @@ block content
   .row
     .col-md-12
       .tile
+        .overlay#settingsEmailTemplatesLoading
+          .m-loader.mr-4
+            svg.m-circular(viewbox='25 25 50 50')
+              circle.path(cx='50' cy='50' r='20' fill='none' stroke-width='4' stroke-miterlimit='10')
+          h3.l-text Loading 
         .tile-body
           .row
             .col-md-3
@@ -29,43 +34,106 @@ block content
             .col-md-9
               h2 Email Templates
               br
+              
+              h3.mt-5 Variables
+              .table-responsive
+                table.table.table-hover.table-bordered#sampleTable
+                  thead
+                    tr
+                      th Name
+                      th Value
+                  tbody
+                    tr
+                      td 
+                        strong {{host}}
+                      td           
+                        input#varsHost.form-control(type='text', placeholder='http://localhost:8080/')
+                    tr
+                      td 
+                        strong {{fromEmail}}
+                      td           
+                        input#varsFromEmail.form-control(type='text', placeholder='example@email.com')
+                    tr
+                      td 
+                        strong {{company}}
+                      td           
+                        input#varsCompany.form-control(type='text', placeholder='our company')
+                    tr
+                      td 
+                        strong {{token}}
+                      td No Defaults
+                    
+                    tr
+                      td 
+                        strong {{userEmail}}
+                      td No Defaults
+                    tr
+                      td 
+                        strong {{username}}
+                      td Default: 
+                        input#varsUsername.form-control(type='text', placeholder='buddy')
+
+                    
+                      
+								
               br
 
-              h3 Email address verification
+              h3.mt-5 Email Address Verification
               
               .form-group
-                label(for='exampleInputEmail1') Subject
-                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                label(for='emailVerificationSubject') Subject
+                input#emailVerificationSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
                          
               .form-group
-                label(for='exampleTextarea') Message
-                textarea#exampleTextarea.form-control(rows='3')
+                label(for='emailVerificationMessage') Message
+                textarea#emailVerificationMessage.form-control(rows='8')
 
-              h3 Password reset
+              h3.mt-5 Password Reset
 
               .form-group
-                label(for='exampleInputEmail1') Subject
-                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                label(for='passwordResetSubject') Subject
+                input#passwordResetSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
                   
               .form-group
-                label(for='exampleTextarea') Message
-                textarea#exampleTextarea.form-control(rows='3')
+                label(for='passwordResetMessage') Message
+                textarea#passwordResetMessage.form-control(rows='8')
 
-              h3 Email address change
+              h3.mt-5 Password Was Reset Sucessfully
 
               .form-group
-                label(for='exampleInputEmail1') Subject
-                input#exampleInputEmail1.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                label(for='resetPasswordEmailSubject') Subject
+                input#resetPasswordEmailSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
                   
               .form-group
-                label(for='exampleTextarea') Message
-                textarea#exampleTextarea.form-control(rows='3')
+                label(for='resetPasswordEmailMessage') Message
+                textarea#resetPasswordEmailMessage.form-control(rows='8')
 
-              button.btn.btn-primary(type='button') Save
+              //- h3.mt-5 Email address change
+
+              //- .form-group
+              //-   label(for='emailChangeSubject') Subject
+              //-   input#emailChangeSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                  
+              //- .form-group
+              //-   label(for='emailChangeMessage') Message
+              //-   textarea#emailChangeMessage.form-control(rows='8')
+
+              h3.mt-5 User Request Approved
+
+              .form-group
+                label(for='userApprovedSubject') Subject
+                input#userApprovedSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+                  
+              .form-group
+                label(for='userApprovedMessage') Message
+                textarea#userApprovedMessage.form-control(rows='8')
+
+              div.btn.btn-primary.mt-5.mb-5(onclick="app.settings.emailTemplates.save()") Save
               
 block specific-js
   // Data table plugin
-//-   script(type='text/javascript', src="/js/plugins/jquery.dataTables.min.js")
-//-   script(type='text/javascript', src="/js/plugins/dataTables.bootstrap.min.js")
-//-   script(type='text/javascript', src="/js/lib/dataTables.buttons.js")
-//-   script(type='text/javascript', src='/js/pages/lead-management/index.js')
+  script.
+    app.settings = {};
+    app.settings.emailTemplates = {};
+    app.settings.emailTemplates.data = {};
+  script(type='text/javascript', src='/js/views/pages/settings/settings-email-templates.js')

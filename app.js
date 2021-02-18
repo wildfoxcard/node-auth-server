@@ -39,6 +39,9 @@ const rolesController = require("./controllers/pages/roles");
 const userManagementController = require("./controllers/pages/user-management");
 const settingsController = require("./controllers/pages/settings");
 const userController = require("./controllers/user");
+const userApiController = require("./controllers/user-api");
+const userRequestController = require("./controllers/pages/user-request");
+
 
 /**
  * Swagger configuration. https://swagger.io/specification/#infoObject
@@ -250,17 +253,42 @@ app.use(
 /**
  * Accounts.
  */
-app.get("/login", userController.getLogin);
-app.post("/login", userController.postLogin);
-app.get("/logout", userController.logout);
-app.get("/forgot", userController.getForgot);
-app.post("/forgot", userController.postForgot);
+app.get("/login/", userController.getLogin);
+app.post("/login/", userController.postLogin);
+// app.post("/api/v1/account/login/", userApiController.apiPostLogin)
+
+app.get("/logout/", userController.logout);
+
+// app.post('/api/v1/account/refresh-token/', userApiController.apiRefreshToken)
+
+app.get("/forgot/", userController.getForgot);
+app.post("/forgot/", userController.postForgot);
+// app.post("/api/v1/account/forgot/", userApiController.apiPostForgot);
+
 app.get("/reset/:token", userController.getReset);
 app.post("/reset/:token", userController.postReset);
-app.get("/signup", userController.getSignup);
-app.post("/signup", userController.postSignup);
+// app.post("/api/v1/account/reset/:token", userApiController.apiPostReset);
+
+app.get("/signup/", userController.getSignup);
+app.get("/signup/request/", userController.getRequest);
+app.post("/signup/", userController.postSignup);
+// app.post("/api/v1/account/signup/", userApiController.apiPostSignup);
+
+
+app.post("/api/v1/login/", userApiController.postLogin);
+app.post("/api/v1/signup/", userApiController.postSignup);
+app.post("/api/v1/forgot/", userApiController.postForgot);
+app.post("/api/v1/reset/:token/", userApiController.postReset);
+app.post("/api/v1/account/profile/", passportConfig.isAuthenticated,userApiController.postUpdateProfile);
+app.post("/api/v1/account/password/", passportConfig.isAuthenticated,userApiController.postUpdatePassword);
+app.post("/api/v1/account/delete/",passportConfig.isAuthenticated, userApiController.postDeleteAccount);
+app.post("/api/v1/account/verify/",passportConfig.isAuthenticated, userApiController.postVerifyEmail);
+app.post("/api/v1/account/verify/:token",passportConfig.isAuthenticated, userApiController.postVerifyEmailToken);
+
+
+
 app.get(
-  "/account/verify",
+  "/account/verify/",
   passportConfig.isAuthenticated,
   userController.getVerifyEmail
 );
@@ -269,19 +297,19 @@ app.get(
   passportConfig.isAuthenticated,
   userController.getVerifyEmailToken
 );
-app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
+app.get("/account/", passportConfig.isAuthenticated, userController.getAccount);
 app.post(
-  "/account/profile",
+  "/account/profile/",
   passportConfig.isAuthenticated,
   userController.postUpdateProfile
 );
 app.post(
-  "/account/password",
+  "/account/password/",
   passportConfig.isAuthenticated,
   userController.postUpdatePassword
 );
 app.post(
-  "/account/delete",
+  "/account/delete/",
   passportConfig.isAuthenticated,
   userController.postDeleteAccount
 );
@@ -294,7 +322,7 @@ app.get(
 /**
  * API Accounts.
  */
-app.post('/api/v1/account/login', userController.apiPostLogin)
+// app.post('/api/v1/account/login', userController.apiPostLogin)
 
 /**
  * Primary app routes.
@@ -354,6 +382,20 @@ app.delete('/api/v1/users/:_id/permissions/:_permissionsId', passportConfig.isAu
 
 app.post('/api/v1/users/:_id/roles', passportConfig.isAuthenticated, userManagementController.postSingleAddRoleToUser); 
 app.delete('/api/v1/users/:_id/roles/:_rolesId', passportConfig.isAuthenticated, userManagementController.deleteSingleRoleInArrayForUser);
+
+// user request
+app.get('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.getManyForm); 
+app.post('/api/v1/user-requests/', userRequestController.postManyForm); 
+app.put('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.putManyForm); 
+app.delete('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.deleteManyForm);
+
+app.get('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.getSingleForm); 
+app.post('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.postSingleForm); 
+app.put('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.putSingleForm); 
+app.delete('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.deleteSingleForm);
+
+app.post('/api/v1/user-requests/:_id/approve/', passportConfig.isAuthenticated, userRequestController.postSingleFormApprove); 
+app.post('/api/v1/user-requests/:_id/reject/', passportConfig.isAuthenticated, userRequestController.postSingleFormReject); 
 
 
 //settings api

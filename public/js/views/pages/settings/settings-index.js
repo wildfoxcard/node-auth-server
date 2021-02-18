@@ -1,4 +1,4 @@
-app.settings.imports.save = () => {
+app.settings.index.save = () => {
   var companyName = $("#companyName").val();
   $.post({
     url: "/api/v1/settings/general/",
@@ -21,7 +21,7 @@ app.settings.imports.save = () => {
   });
 };
 
-app.settings.imports.load = () => {
+app.settings.index.load = () => {
   $.get({
     url: "/api/v1/settings/general/",
     success: (results) => {
@@ -33,5 +33,5 @@ app.settings.imports.load = () => {
 
 $(() => {
   $("#settingsGeneralLoading").show();
-  app.settings.imports.load();
+  app.settings.index.load();
 });

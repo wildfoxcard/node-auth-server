@@ -118,6 +118,25 @@ passport.use(new SnapchatStrategy({
   }
 }));
 
+
+// var cookieExtractor = function(req) {
+//   var token = null;
+//   if (req && req.cookies) token = req.cookies['jwt'];
+//   return token;
+// };
+// passport.use(new JwtStrategy({jwtFromRequest: cookieExtractor,  secretOrKey: process.env.JWT_SECRET}, function(jwt_payload, done) {
+//   User.findOne({id: jwt_payload.id}, function(err, user) {
+//     if (err) {
+//       return done(err, false);
+//     }
+//     if (user) {
+//       done(null, user);
+//     } else {
+//       done(null, false);
+//     }
+//   });
+// }));
+
 /**
  * Sign in with Facebook.
  */

@@ -1,19 +1,3 @@
-/**
- * @swagger
- *
- * definitions:
- *    SettingsGeneral:
- *        type: "object"
- *        properties:
- *          companyName:
- *            type: "string"
- *    SettingsPasswordPolicy:
- *        type: "object"
- *        properties:
- *          companyName:
- *            type: "string"
- *
- */
 const validator = require("validator");
 
 const UserModel = require("../../models/User");

@@ -5,7 +5,7 @@ app.permissions.post = () => {
   const name = $("#name").val();
 
   $.post({
-    url: "/api/v1/permissions",
+    url: "/api/v1/permissions/",
     data: {
       name,
     },

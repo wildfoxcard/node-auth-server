@@ -1,0 +1,52 @@
+extends ../layouts/account-layout
+
+
+block content
+  .login-container
+    .login-box(style="height: 500px;")
+      form#request-form.login-form(, method='POST')
+        
+        h3.login-head
+          //- i.fa.fa-lg.fa-fw.fa-user
+          | Request 
+
+        .alert.alert-info To become a user, your request must be reviewed by an admin.
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+          label.control-label Email
+          input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
+
+        .form-group
+          label.control-label Name
+          input.form-control(type='text', name='name', id='name', placeholder='John Doe', autocomplete='name', required)
+
+        //- .form-group.row
+        //-   label.col-md-3.col-form-label.font-weight-bold.text-right(for='email') Email
+        //-   .col-md-7
+        //-     input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, autocomplete='email', required)
+        //- .form-group.row
+        //-   label.col-md-3.col-form-label.font-weight-bold.text-right(for='password') Password
+        //-   .col-md-7
+        //-     input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='new-password', minlength='8', required)
+        //- .form-group.row
+        //-   label.col-md-3.col-form-label.font-weight-bold.text-right(for='confirmPassword') Confirm Password
+        //-   .col-md-7
+        //-     input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', autocomplete='new-password', minlength='8', required)
+        
+        .form-group.btn-container
+          button.btn.btn-primary.btn-block
+            i.fa.fa-sign-in.fa-lg.fa-fw
+            | REQUEST
+        br
+        br
+        br
+        u
+          a(href="/" style="align-self: flex-start;")
+            i.fa.fa-chevron-left.mr-3
+            | Home Page
+
+block specific-js
+  // Data table plugin
+  script.
+    app.account = {};
+  script(type='text/javascript', src='/js/views/account/signup-request.js')
