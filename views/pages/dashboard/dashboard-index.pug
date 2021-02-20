@@ -26,7 +26,7 @@ block content
           small 
             | (30 days) 
           p
-            b 5
+            b #{users30DayCount}
 
     .col-md-6.col-lg-3
       .widget-small.primary.coloured-icon
@@ -37,35 +37,23 @@ block content
           small 
             a(href="/user-management/") View All
           p
-            b 125
-
-    .col-md-6.col-lg-3
-      .widget-small.info.coloured-icon
-        i.icon.fa.fa-sign-in.fa-3x
-        div.info
-          h4.mb-0
-            | Unigue Log-ins
-          small 
-            | (30 days) 
-          p
-            b 25
-
+            b #{usersCount}
 
     .col-md-6.col-lg-3
       .widget-small.danger.coloured-icon
         i.icon.fa.fa-laptop.fa-3x
         div.info
           h4.mb-0
-            | Applications
+            | Applications (Users)
           small 
             a(href="/settings/applications/") View All
           p
-            b 125
+            b #{applicationUserCount}
   .row
     .col-md-12
       .tile
         h3.tile-title Special Message
-        p Thank you for using node-auth-server
+        p Thank you for using Wild Fox Auth
         
 
 

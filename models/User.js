@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
   twitch: String,
   quickbooks: String,
   tokens: Array,
+  type: {
+    type: String,
+    enum: ["NORMAL","TEST", "APPLICATION"],
+    default: "NORMAL"
+  },
   isDeleted: {
     type: Boolean,
     default: false
