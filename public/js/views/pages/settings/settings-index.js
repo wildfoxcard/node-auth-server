@@ -1,15 +1,19 @@
+app.settings.index = {};
 app.settings.index.save = () => {
-  var companyName = $("#companyName").val();
+  var serverName = $("#serverName").val();
+  var serverMainUrl = $("#serverMainUrl").val();
   $.post({
     url: "/api/v1/settings/general/",
     data: {
-      companyName: companyName,
+      serverName,
+      serverMainUrl
     },
     success: (results) => {
+      $('.app-header__logo').html(serverName)
       $.notify(
         {
           title: "Update Complete : ",
-          message: `Company Name now called ${companyName}!`,
+          message: `General settings has been updated!`,
           icon: "fa fa-check",
         },
         {
@@ -25,7 +29,8 @@ app.settings.index.load = () => {
   $.get({
     url: "/api/v1/settings/general/",
     success: (results) => {
-      $("#companyName").val(results.data.companyName);
+      $("#serverName").val(results.data.serverName);
+      $("#serverMainUrl").val(results.data.serverMainUrl);
       $("#settingsGeneralLoading").hide();
     },
   });

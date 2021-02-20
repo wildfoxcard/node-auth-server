@@ -144,8 +144,15 @@ app.use((req, res, next) => {
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.disable("x-powered-by");
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.user = req.user;
+  
+  const settingsForLocals = await Settings.findOne({});
+  res.locals.serverName = settingsForLocals.general.serverName
+  res.locals.serverMainUrl = settingsForLocals.general.serverMainUrl
+
+  console.log('res.locals', res.locals)
+
   next();
 });
 app.use((req, res, next) => {

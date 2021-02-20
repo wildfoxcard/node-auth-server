@@ -16,7 +16,7 @@ exports.processSignup = (
   //     msg: "Password must be at least 8 characters long",
   //   });
   if (password !== confirmPassword)
-    validationErrors.push({ msg: "Passwords do not match" });
+    validationErrors.push({ msg: "P  asswords do not match" });
 
   const passwordPolicy = processEnforcePasswordPolicy({ text: password });
 

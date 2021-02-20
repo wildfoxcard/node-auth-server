@@ -78,29 +78,15 @@ const settingsSchema = new mongoose.Schema(
       }
     },
     general: {
-      // companyName: {
-      //   type: String
-      // }
       serverName: {
-        type: String
+        type: String,
+        default: "Auth"
       },
       serverMainUrl: {
-        type: String
+        type: String,
+        default: "/dashboard"
       }
     }
-    //
-    // newUsersCreatedBy: {
-    //   required: true,
-    //   type: String,
-    //   enum: ["INVITE", "PASSCODE", "NORMALSIGNUP"],
-    //   default: "INVITE",
-    // },
-    // newUsersPasscode: { type: String },
-    // cors: [
-    //   {
-    //     url: { type: String, unique: true },
-    //   },
-    // ],
   },
   { timestamps: true }
 );

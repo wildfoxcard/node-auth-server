@@ -34,17 +34,20 @@ block content
             .col-md-9
               h2 General
               .form-group
-                label(for='exampleInputEmail1') Company Name
-                input#companyName.form-control(type='email', aria-describedby='emailHelp', placeholder='Awesome Company LLC')
-                small#emailHelp.form-text.text-muted Used for email templates.
-
+                label(for='serverName') Server Name
+                input#serverName.form-control(type='text', placeholder='Producer Auth')
+                
+              .form-group
+                label(for='serverMainUrl') Server Main Url
+                input#serverMainUrl.form-control(type='text', placeholder='/dashboard')
+                
               button.btn.btn-primary(type='button' onclick="app.settings.index.save()") Save
 
 block specific-js
   // Data table plugin
   script.
     app.settings = {};
-    app.settings.imports = {};
-    app.settings.imports.data = {};
+    app.settings.index = {};
+    app.settings.index.data = {};
   script(type='text/javascript', src='/js/views/pages/settings/settings-index.js')
 
