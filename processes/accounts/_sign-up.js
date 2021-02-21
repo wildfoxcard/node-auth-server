@@ -4,7 +4,7 @@ const {
   processEnforcePasswordPolicy,
 } = require("../../processes/enforce-password-policy");
 
-exports.processSignup = (
+exports.processSignup = async (
   { email, password, confirmPassword },
   { validationFailedFN, signInErrorFN, noUserErrorFN, successFN }
 ) => {
@@ -16,9 +16,9 @@ exports.processSignup = (
   //     msg: "Password must be at least 8 characters long",
   //   });
   if (password !== confirmPassword)
-    validationErrors.push({ msg: "P  asswords do not match" });
+    validationErrors.push({ msg: "Passwords do not match" });
 
-  const passwordPolicy = processEnforcePasswordPolicy({ text: password });
+  const passwordPolicy = await processEnforcePasswordPolicy({ text: password });
 
   if (!passwordPolicy.success) {
     passwordPolicy.messages.map((p) => {
@@ -33,9 +33,15 @@ exports.processSignup = (
     gmail_remove_dots: false,
   });
 
+  let isAdmin = false
+  if (await User.countDocuments() === 0) {
+    isAdmin = true;
+  }
+
   const user = new User({
     email: email,
     password: password,
+    isAdmin
   });
 
   User.findOne({ email: email }, (err, existingUser) => {
@@ -43,14 +49,14 @@ exports.processSignup = (
       return signInErrorFN(err);
     }
     if (existingUser) {
-      return noUserErrorFN(err, user, info);
+      return noUserErrorFN(err, user);
     }
     user.save((err) => {
       if (err) {
         return signInErrorFN(err);
       }
 
-      return successFN(err, user, info);
+      return successFN(user);
     });
   });
 };

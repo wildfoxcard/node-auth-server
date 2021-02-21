@@ -151,8 +151,6 @@ app.use(async (req, res, next) => {
   res.locals.serverName = settingsForLocals.general.serverName
   res.locals.serverMainUrl = settingsForLocals.general.serverMainUrl
 
-  console.log('res.locals', res.locals)
-
   next();
 });
 app.use((req, res, next) => {

@@ -1,9 +1,10 @@
 const SettingsModel = require("../models/Settings");
 
-exports.processEnforcePasswordPolicy = ({text}) => {
-    return new Promise((resolve, reject) => {
-        const settings = SettingsModel.findOne({});
-        
+exports.processEnforcePasswordPolicy = async ({text}) => {
+    return new Promise(async (resolve, reject) => {
+        const errorArray = [];
+        const settings = await SettingsModel.findOne({});
+
         const 
         {passwordLength,
             shouldHaveUppercaseLetter,

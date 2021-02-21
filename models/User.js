@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   emailVerificationToken: String,
   emailVerified: Boolean,
-  isAdmin: Boolean,
   isBlocked: Boolean,
 
   snapchat: String,

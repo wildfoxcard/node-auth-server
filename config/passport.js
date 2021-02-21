@@ -773,7 +773,7 @@ exports.isAdmin = (req, res, next) => {
   if (req.path.substr(0, 4) === "/api") {
     res.status(401).json({
       success: false,
-      message: "Authentication token missing"
+      message: "Admin Authentication token missing"
     })
   } else {
     res.redirect('/login');
