@@ -755,6 +755,31 @@ exports.isAuthenticated = (req, res, next) => {
   }
 };
 
+
+/**
+ * Login Required middleware.
+ */
+exports.isAdmin = (req, res, next) => {
+  //mvc
+  if (req.isAuthenticated() && req.user && req.user.isAdmin) {
+    return next();
+  }
+
+  //api
+  if (req.headers["authorization"] && req.user && req.user.isAdmin) {
+    return next();
+  }
+  
+  if (req.path.substr(0, 4) === "/api") {
+    res.status(401).json({
+      success: false,
+      message: "Authentication token missing"
+    })
+  } else {
+    res.redirect('/login');
+  }
+};
+
 exports.isRootAdmin = (req, res, next) => {
   //mvc
   if (req.isAuthenticated() && req.user.isRootAdmin) {

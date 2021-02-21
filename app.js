@@ -334,213 +334,200 @@ app.get(
 /**
  * Primary app routes.
  */
-app.get("/", passportConfig.isAuthenticated, dashboardController.getIndex);
-app.get("/dashboard", passportConfig.isAuthenticated, dashboardController.getIndex);
+app.get("/", passportConfig.isAdmin, dashboardController.getIndex);
+app.get("/dashboard", passportConfig.isAdmin, dashboardController.getIndex);
 
-app.get("/roles/", passportConfig.isAuthenticated, rolesController.getIndex);
-app.get("/roles/form/", passportConfig.isAuthenticated, rolesController.getForm);
+app.get("/roles/", passportConfig.isAdmin, rolesController.getIndex);
+app.get("/roles/form/", passportConfig.isAdmin, rolesController.getForm);
 // roles api
-app.get('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.getManyForm); 
-app.post('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.postManyForm); 
-app.put('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.putManyForm); 
-app.delete('/api/v1/roles/', passportConfig.isAuthenticated, rolesController.deleteManyForm);
+app.get('/api/v1/roles/', passportConfig.isAdmin, rolesController.getManyForm); 
+app.post('/api/v1/roles/', passportConfig.isAdmin, rolesController.postManyForm); 
+app.put('/api/v1/roles/', passportConfig.isAdmin, rolesController.putManyForm); 
+app.delete('/api/v1/roles/', passportConfig.isAdmin, rolesController.deleteManyForm);
 
-app.get('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.getSingleForm); 
-app.post('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.postSingleForm); 
-app.put('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.putSingleForm); 
-app.delete('/api/v1/roles/:_id/', passportConfig.isAuthenticated, rolesController.deleteSingleForm);
+app.get('/api/v1/roles/:_id/', passportConfig.isAdmin, rolesController.getSingleForm); 
+app.post('/api/v1/roles/:_id/', passportConfig.isAdmin, rolesController.postSingleForm); 
+app.put('/api/v1/roles/:_id/', passportConfig.isAdmin, rolesController.putSingleForm); 
+app.delete('/api/v1/roles/:_id/', passportConfig.isAdmin, rolesController.deleteSingleForm);
 
-app.post('/api/v1/roles/:_id/permissions', passportConfig.isAuthenticated, rolesController.postSingleAddPermissionToRole); 
-app.delete('/api/v1/roles/:_id/permissions/:_permissionsId', passportConfig.isAuthenticated, rolesController.deleteSinglePermissionInArrayForRole);
-
-
+app.post('/api/v1/roles/:_id/permissions', passportConfig.isAdmin, rolesController.postSingleAddPermissionToRole); 
+app.delete('/api/v1/roles/:_id/permissions/:_permissionsId', passportConfig.isAdmin, rolesController.deleteSinglePermissionInArrayForRole);
 
 
-app.get("/permissions/", passportConfig.isAuthenticated, permissionsController.viewIndex);
-app.get("/permissions/form/", passportConfig.isAuthenticated, permissionsController.viewForm);
+
+
+app.get("/permissions/", passportConfig.isAdmin, permissionsController.viewIndex);
+app.get("/permissions/form/", passportConfig.isAdmin, permissionsController.viewForm);
 // permisions api
-app.get('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.getManyForm); 
-app.post('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.postManyForm); 
-app.put('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.putManyForm); 
-app.delete('/api/v1/permissions/', passportConfig.isAuthenticated, permissionsController.deleteManyForm);
+app.get('/api/v1/permissions/', passportConfig.isAdmin, permissionsController.getManyForm); 
+app.post('/api/v1/permissions/', passportConfig.isAdmin, permissionsController.postManyForm); 
+app.put('/api/v1/permissions/', passportConfig.isAdmin, permissionsController.putManyForm); 
+app.delete('/api/v1/permissions/', passportConfig.isAdmin, permissionsController.deleteManyForm);
 
-app.get('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.getSingleForm); 
-app.post('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.postSingleForm); 
-app.put('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.putSingleForm); 
-app.delete('/api/v1/permissions/:_id/', passportConfig.isAuthenticated, permissionsController.deleteSingleForm);
+app.get('/api/v1/permissions/:_id/', passportConfig.isAdmin, permissionsController.getSingleForm); 
+app.post('/api/v1/permissions/:_id/', passportConfig.isAdmin, permissionsController.postSingleForm); 
+app.put('/api/v1/permissions/:_id/', passportConfig.isAdmin, permissionsController.putSingleForm); 
+app.delete('/api/v1/permissions/:_id/', passportConfig.isAdmin, permissionsController.deleteSingleForm);
 
 
-app.get("/user-management/", passportConfig.isAuthenticated, userManagementController.getIndex);
-app.get("/user-management/form/", passportConfig.isAuthenticated, userManagementController.getForm);
+app.get("/user-management/", passportConfig.isAdmin, userManagementController.getIndex);
+app.get("/user-management/form/", passportConfig.isAdmin, userManagementController.getForm);
 // user api
-app.get('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.getManyForm); 
-app.post('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.postManyForm); 
-app.put('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.putManyForm); 
-app.delete('/api/v1/users/', passportConfig.isAuthenticated, userManagementController.deleteManyForm);
+app.get('/api/v1/users/', passportConfig.isAdmin, userManagementController.getManyForm); 
+app.post('/api/v1/users/', passportConfig.isAdmin, userManagementController.postManyForm); 
+app.put('/api/v1/users/', passportConfig.isAdmin, userManagementController.putManyForm); 
+app.delete('/api/v1/users/', passportConfig.isAdmin, userManagementController.deleteManyForm);
 
-app.get('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.getSingleForm); 
-app.post('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.postSingleForm); 
-app.put('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.putSingleForm); 
-app.delete('/api/v1/users/:_id/', passportConfig.isAuthenticated, userManagementController.deleteSingleForm);
+app.get('/api/v1/users/:_id/', passportConfig.isAdmin, userManagementController.getSingleForm); 
+app.post('/api/v1/users/:_id/', passportConfig.isAdmin, userManagementController.postSingleForm); 
+app.put('/api/v1/users/:_id/', passportConfig.isAdmin, userManagementController.putSingleForm); 
+app.delete('/api/v1/users/:_id/', passportConfig.isAdmin, userManagementController.deleteSingleForm);
 
-app.post('/api/v1/users/:_id/permissions', passportConfig.isAuthenticated, userManagementController.postSingleAddPermissionToUser); 
-app.delete('/api/v1/users/:_id/permissions/:_permissionsId', passportConfig.isAuthenticated, userManagementController.deleteSinglePermissionInArrayForUser);
+app.post('/api/v1/users/:_id/permissions', passportConfig.isAdmin, userManagementController.postSingleAddPermissionToUser); 
+app.delete('/api/v1/users/:_id/permissions/:_permissionsId', passportConfig.isAdmin, userManagementController.deleteSinglePermissionInArrayForUser);
 
 
-app.post('/api/v1/users/:_id/roles', passportConfig.isAuthenticated, userManagementController.postSingleAddRoleToUser); 
-app.delete('/api/v1/users/:_id/roles/:_rolesId', passportConfig.isAuthenticated, userManagementController.deleteSingleRoleInArrayForUser);
+app.post('/api/v1/users/:_id/roles', passportConfig.isAdmin, userManagementController.postSingleAddRoleToUser); 
+app.delete('/api/v1/users/:_id/roles/:_rolesId', passportConfig.isAdmin, userManagementController.deleteSingleRoleInArrayForUser);
 
 // user request
-app.get('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.getManyForm); 
+app.get('/api/v1/user-requests/', passportConfig.isAdmin, userRequestController.getManyForm); 
 app.post('/api/v1/user-requests/', userRequestController.postManyForm); 
-app.put('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.putManyForm); 
-app.delete('/api/v1/user-requests/', passportConfig.isAuthenticated, userRequestController.deleteManyForm);
+app.put('/api/v1/user-requests/', passportConfig.isAdmin, userRequestController.putManyForm); 
+app.delete('/api/v1/user-requests/', passportConfig.isAdmin, userRequestController.deleteManyForm);
 
-app.get('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.getSingleForm); 
-app.post('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.postSingleForm); 
-app.put('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.putSingleForm); 
-app.delete('/api/v1/user-requests/:_id/', passportConfig.isAuthenticated, userRequestController.deleteSingleForm);
+app.get('/api/v1/user-requests/:_id/', passportConfig.isAdmin, userRequestController.getSingleForm); 
+app.post('/api/v1/user-requests/:_id/', passportConfig.isAdmin, userRequestController.postSingleForm); 
+app.put('/api/v1/user-requests/:_id/', passportConfig.isAdmin, userRequestController.putSingleForm); 
+app.delete('/api/v1/user-requests/:_id/', passportConfig.isAdmin, userRequestController.deleteSingleForm);
 
-app.post('/api/v1/user-requests/:_id/approve/', passportConfig.isAuthenticated, userRequestController.postSingleFormApprove); 
-app.post('/api/v1/user-requests/:_id/reject/', passportConfig.isAuthenticated, userRequestController.postSingleFormReject); 
+app.post('/api/v1/user-requests/:_id/approve/', passportConfig.isAdmin, userRequestController.postSingleFormApprove); 
+app.post('/api/v1/user-requests/:_id/reject/', passportConfig.isAdmin, userRequestController.postSingleFormReject); 
 
 
 //settings api
-app.get("/settings/", passportConfig.isAuthenticated, settingsController.viewGeneral);
-app.get("/api/v1/settings/general/", passportConfig.isAuthenticated, settingsController.getGeneral);
-app.post("/api/v1/settings/general/", passportConfig.isAuthenticated, settingsController.postGeneral);
+app.get("/settings/", passportConfig.isAdmin, settingsController.viewGeneral);
+app.get("/api/v1/settings/general/", passportConfig.isAdmin, settingsController.getGeneral);
+app.post("/api/v1/settings/general/", passportConfig.isAdmin, settingsController.postGeneral);
 
 
-app.get("/settings/new-users/", passportConfig.isAuthenticated, settingsController.viewNewUsers);
-app.get("/api/v1/settings/new-users/", passportConfig.isAuthenticated, settingsController.getNewUsers);
-app.post("/api/v1/settings/new-users/", passportConfig.isAuthenticated, settingsController.postNewUsers);
+app.get("/settings/new-users/", passportConfig.isAdmin, settingsController.viewNewUsers);
+app.get("/api/v1/settings/new-users/", passportConfig.isAdmin, settingsController.getNewUsers);
+app.post("/api/v1/settings/new-users/", passportConfig.isAdmin, settingsController.postNewUsers);
 
-app.get("/settings/exports/", passportConfig.isAuthenticated, settingsController.viewExports);
-app.get("/settings/imports/", passportConfig.isAuthenticated, settingsController.viewImports);
+app.get("/settings/exports/", passportConfig.isAdmin, settingsController.viewExports);
+app.get("/settings/imports/", passportConfig.isAdmin, settingsController.viewImports);
 
-app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.viewEmailTemplates);
-app.get("/api/v1/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
-app.post("/api/v1/settings/email-templates/", passportConfig.isAuthenticated, settingsController.postEmailTemplates);
+app.get("/settings/email-templates/", passportConfig.isAdmin, settingsController.viewEmailTemplates);
+app.get("/api/v1/settings/email-templates/", passportConfig.isAdmin, settingsController.getEmailTemplates);
+app.post("/api/v1/settings/email-templates/", passportConfig.isAdmin, settingsController.postEmailTemplates);
 
-app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.viewPasswordPolicy);
-app.get("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
-app.post("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.postPasswordPolicy);
-
-
-
+app.get("/settings/password-policy/", passportConfig.isAdmin, settingsController.viewPasswordPolicy);
+app.get("/api/v1/settings/password-policy/", passportConfig.isAdmin, settingsController.getPasswordPolicy);
+app.post("/api/v1/settings/password-policy/", passportConfig.isAdmin, settingsController.postPasswordPolicy);
 
 
 
-
-// app.get("/settings/applications/", passportConfig.isAuthenticated, settingsController.getApplications);
-// app.get("/settings/cors/", passportConfig.isAuthenticated, settingsController.getCors);
-// app.get("/settings/email-templates/", passportConfig.isAuthenticated, settingsController.getEmailTemplates);
-
-// app.get("/settings/password-policy/", passportConfig.isAuthenticated, settingsController.getPasswordPolicy);
-// app.post("/api/v1/settings/password-policy/", passportConfig.isAuthenticated, settingsController.postPasswordPolicy);
-
-// // app.get("/settings/privacy-policy/", passportConfig.isAuthenticated, settingsController.getPrivacyPolicy);
-// app.get("/settings/imports-exports/", passportConfig.isAuthenticated, settingsController.getImportExports);
 
 // docs
-app.use('/docs/rest-api', passportConfig.isAuthenticated, swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use('/docs/rest-api', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 /**
  * API examples routes.
  */
-app.get("/api", passportConfig.isAuthenticated, apiController.getApi);
-app.get("/api/lastfm", passportConfig.isAuthenticated, apiController.getLastfm);
+app.get("/api", passportConfig.isAdmin, apiController.getApi);
+app.get("/api/lastfm", passportConfig.isAdmin, apiController.getLastfm);
 app.get(
   "/api/nyt",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getNewYorkTimes
 );
 app.get(
   "/api/steam",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getSteam
 );
-app.get("/api/stripe", passportConfig.isAuthenticated, apiController.getStripe);
+app.get("/api/stripe", passportConfig.isAdmin, apiController.getStripe);
 app.post(
   "/api/stripe",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.postStripe
 );
 app.get(
   "/api/scraping",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getScraping
 );
-app.get("/api/twilio", passportConfig.isAuthenticated, apiController.getTwilio);
+app.get("/api/twilio", passportConfig.isAdmin, apiController.getTwilio);
 app.post(
   "/api/twilio",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.postTwilio
 );
 app.get(
   "/api/foursquare",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getFoursquare
 );
 app.get(
   "/api/tumblr",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getTumblr
 );
 app.get(
   "/api/facebook",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getFacebook
 );
 app.get(
   "/api/github",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getGithub
 );
 app.get(
   "/api/twitter",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getTwitter
 );
 app.post(
   "/api/twitter",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.postTwitter
 );
 app.get(
   "/api/twitch",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getTwitch
 );
 app.get(
   "/api/instagram",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getInstagram
 );
-app.get("/api/paypal", passportConfig.isAuthenticated, apiController.getPayPal);
+app.get("/api/paypal", passportConfig.isAdmin, apiController.getPayPal);
 app.get(
   "/api/paypal/success",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getPayPalSuccess
 );
 app.get(
   "/api/paypal/cancel",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getPayPalCancel
 );
-app.get("/api/lob", passportConfig.isAuthenticated, apiController.getLob);
+app.get("/api/lob", passportConfig.isAdmin, apiController.getLob);
 app.get(
   "/api/upload",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   lusca({ csrf: true }),
   apiController.getFileUpload
 );
@@ -552,42 +539,42 @@ app.post(
 );
 app.get(
   "/api/pinterest",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getPinterest
 );
 app.post(
   "/api/pinterest",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.postPinterest
 );
 app.get(
   "/api/here-maps",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getHereMaps
 );
 app.get(
   "/api/google-maps",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   apiController.getGoogleMaps
 );
 app.get(
   "/api/google/drive",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getGoogleDrive
 );
 app.get("/api/chart", apiController.getChart);
 app.get(
   "/api/google/sheets",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getGoogleSheets
 );
 app.get(
   "/api/quickbooks",
-  passportConfig.isAuthenticated,
+  passportConfig.isAdmin,
   passportConfig.isAuthorized,
   apiController.getQuickbooks
 );
