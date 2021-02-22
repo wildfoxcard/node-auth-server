@@ -41,6 +41,7 @@ const settingsController = require("./controllers/pages/settings");
 const userController = require("./controllers/user");
 const userApiController = require("./controllers/user-api");
 const userRequestController = require("./controllers/pages/user-request");
+const errorsController = require("./controllers/pages/errors");
 
 
 /**
@@ -403,6 +404,20 @@ app.post('/api/v1/user-requests/:_id/approve/', passportConfig.isAdmin, userRequ
 app.post('/api/v1/user-requests/:_id/reject/', passportConfig.isAdmin, userRequestController.postSingleFormReject); 
 
 
+app.get("/errors/", passportConfig.isAdmin, errorsController.viewList);
+app.get("/errors/log/", passportConfig.isAdmin, errorsController.viewSingle);
+// roles api
+app.get('/api/v1/errors/', passportConfig.isAdmin, errorsController.getManyForm); 
+app.post('/api/v1/errors/', passportConfig.isAdmin, errorsController.postManyForm); 
+app.put('/api/v1/errors/', passportConfig.isAdmin, errorsController.putManyForm); 
+app.delete('/api/v1/errors/', passportConfig.isAdmin, errorsController.deleteManyForm);
+
+app.get('/api/v1/errors/:_id/', passportConfig.isAdmin, errorsController.getSingleForm); 
+app.post('/api/v1/errors/:_id/', passportConfig.isAdmin, errorsController.postSingleForm); 
+app.put('/api/v1/errors/:_id/', passportConfig.isAdmin, errorsController.putSingleForm); 
+app.delete('/api/v1/errors/:_id/', passportConfig.isAdmin, errorsController.deleteSingleForm);
+
+
 //settings api
 app.get("/settings/", passportConfig.isAdmin, settingsController.viewGeneral);
 app.get("/api/v1/settings/general/", passportConfig.isAdmin, settingsController.getGeneral);
@@ -588,7 +603,7 @@ app.get(
   "/auth/instagram/callback",
   passport.authenticate("instagram", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get("/auth/snapchat", passport.authenticate("snapchat"));
@@ -596,7 +611,7 @@ app.get(
   "/auth/snapchat/callback",
   passport.authenticate("snapchat", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get(
@@ -607,7 +622,7 @@ app.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get("/auth/github", passport.authenticate("github"));
@@ -615,7 +630,7 @@ app.get(
   "/auth/github/callback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get(
@@ -635,7 +650,7 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get("/auth/twitter", passport.authenticate("twitter"));
@@ -643,7 +658,7 @@ app.get(
   "/auth/twitter/callback",
   passport.authenticate("twitter", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get(
@@ -654,7 +669,7 @@ app.get(
   "/auth/linkedin/callback",
   passport.authenticate("linkedin", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 app.get("/auth/twitch", passport.authenticate("twitch", {}));
@@ -662,7 +677,7 @@ app.get(
   "/auth/twitch/callback",
   passport.authenticate("twitch", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    res.redirect(req.session.returnTo || "/login");
   }
 );
 

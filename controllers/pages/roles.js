@@ -1,26 +1,44 @@
-
 const RoleModel = require("../../models/Role");
 const PermissionModel = require("../../models/Permission");
-const { errorReporter } = require("../../config/errorReporter");
+const {
+  errorReporter,
+  errorReporterWithHtml,
+} = require("../../processes/errorReporter");
 
 exports.getIndex = (req, res) => {
-  res.render("pages/roles/list", {
-    title: "Roles",
-  });
+  try {
+    res.render("pages/roles/list", {
+      title: "Roles",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.getForm = async (req, res) => {
-  let data;
+  try {
+    let data;
 
-  if (req.query.id) {
-    data = await RoleModel.findById(req.query.id);
+    if (req.query.id) {
+      data = await RoleModel.findById(req.query.id);
+    }
+
+    res.render("pages/roles/form", {
+      title: "Form | Roles",
+      id: req.query.id,
+      data,
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
   }
-
-  res.render("pages/roles/form", {
-    title: "Form | Roles",
-    id: req.query.id,
-    data,
-  });
 };
 
 /**
@@ -47,8 +65,8 @@ exports.getForm = async (req, res) => {
  *         description: Filter the list of roles using role's name.
  */
 exports.getManyForm = async (req, res) => {
-  const { name } = req.query;
   try {
+    const { name } = req.query;
     let queryObj;
 
     if (name && name.length > 0) {
@@ -67,8 +85,6 @@ exports.getManyForm = async (req, res) => {
     }
 
     const roles = await RoleModel.find(queryObj).populate("permissions").exec();
-
-    console.log("roles", roles);
 
     res.json({
       success: true,
@@ -100,31 +116,29 @@ exports.getManyForm = async (req, res) => {
  *
  */
 exports.postManyForm = async (req, res) => {
-  const { name } = req.body;
-
-  console.log("roles body", req.body);
-
-  if (!name || name.length === 1) {
-    return res.json({
-      success: false,
-      message: "Please enter a name for a roles",
-    });
-  }
-
-  const existingRole = await RoleModel.findOne({ name });
-
-  if (existingRole) {
-    return res.json({
-      success: false,
-      message: "Role already exist",
-    });
-  }
-
-  const newRole = new RoleModel({
-    name,
-  });
-
   try {
+    const { name } = req.body;
+
+    if (!name || name.length === 1) {
+      return res.json({
+        success: false,
+        message: "Please enter a name for a roles",
+      });
+    }
+
+    const existingRole = await RoleModel.findOne({ name });
+
+    if (existingRole) {
+      return res.json({
+        success: false,
+        message: "Role already exist",
+      });
+    }
+
+    const newRole = new RoleModel({
+      name,
+    });
+
     await newRole.save();
 
     res.status(201).json({
@@ -176,35 +190,35 @@ exports.postManyForm = async (req, res) => {
  */
 
 exports.putManyForm = async (req, res) => {
-  let { roles } = req.body;
-
-  if (!roles || roles.length < 1) {
-    return res.json({
-      success: false,
-      message: "Not role properties found on attach object.",
-    });
-  }
-
-  if (roles.length > 10) {
-    return res.json({
-      success: false,
-      message: "Roles array can not be more than 10 items.",
-    });
-  }
-  const rolesRecordWithIdCount = roles.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (roles.length !== rolesRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id property.",
-    });
-  }
-
   try {
+    let { roles } = req.body;
+
+    if (!roles || roles.length < 1) {
+      return res.json({
+        success: false,
+        message: "Not role properties found on attach object.",
+      });
+    }
+
+    if (roles.length > 10) {
+      return res.json({
+        success: false,
+        message: "Roles array can not be more than 10 items.",
+      });
+    }
+    const rolesRecordWithIdCount = roles.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (roles.length !== rolesRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id property.",
+      });
+    }
+
     const rolesFromDb = await RoleModel.find({
       _id: { $in: roles.map((p) => p._id) },
       isDeleted: {
@@ -279,21 +293,21 @@ exports.putManyForm = async (req, res) => {
  */
 
 exports.deleteManyForm = async (req, res) => {
-  const { roles } = req.body;
-  const rolesRecordWithIdCount = roles.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (roles.length !== rolesRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id.",
-    });
-  }
-
   try {
+    const { roles } = req.body;
+    const rolesRecordWithIdCount = roles.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (roles.length !== rolesRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id.",
+      });
+    }
+
     const rolesFromDb = await RoleModel.find({
       _id: { $in: roles.map((p) => p._id) },
     });
@@ -354,11 +368,9 @@ exports.deleteManyForm = async (req, res) => {
  *
  */
 exports.getSingleForm = async (req, res) => {
-  const { _id } = req.params;
-
-  console.log("id", req.params._id);
-
   try {
+    const { _id } = req.params;
+
     const role = await RoleModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -411,17 +423,17 @@ exports.postSingleForm = async (req, res) => {
  *
  */
 exports.putSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const role = await RoleModel.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       { name: body.name },
@@ -460,17 +472,17 @@ exports.putSingleForm = async (req, res) => {
  *
  */
 exports.deleteSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const role = await RoleModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -533,25 +545,26 @@ exports.deleteSingleForm = async (req, res) => {
  */
 
 exports.postSingleAddPermissionToRole = async (req, res) => {
-  const { body } = req;
-  const _permissionId = body._id;
-  const _roleId = req.params._id;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
-  if (!_permissionId) {
-    return res.json({
-      success: false,
-      message: "request requires a json object with an _id of permissions _id.",
-    });
-  }
-
   try {
+    const { body } = req;
+    const _permissionId = body._id;
+    const _roleId = req.params._id;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
+    if (!_permissionId) {
+      return res.json({
+        success: false,
+        message:
+          "request requires a json object with an _id of permissions _id.",
+      });
+    }
+
     const permissionsWithSameId = await PermissionModel.findById(_permissionId);
 
     if (permissionsWithSameId === null) {
@@ -606,10 +619,10 @@ exports.postSingleAddPermissionToRole = async (req, res) => {
  */
 
 exports.deleteSinglePermissionInArrayForRole = async (req, res) => {
-  const _permissionId = req.params._permissionsId;
-  const _roleId = req.params._id;
-
   try {
+    const _permissionId = req.params._permissionsId;
+    const _roleId = req.params._id;
+
     const rolesWithSameId = await RoleModel.findById(_roleId);
 
     if (rolesWithSameId === null) {

@@ -1,27 +1,46 @@
 const validator = require("validator");
 
 const UserRequestModel = require("../../models/UserRequest");
-const { errorReporter } = require("../../config/errorReporter");
+const {
+  errorReporter,
+  errorReporterWithHtml,
+} = require("../../processes/errorReporter");
 const { processApproveUserRequest } = require("../../processes/accounts/");
 
 exports.getIndex = (req, res) => {
-  res.render("pages/user-management/list", {
-    title: "User Management",
-  });
+  try {
+    res.render("pages/user-management/list", {
+      title: "User Management",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.getForm = async (req, res) => {
-  let data;
+  try {
+    let data;
 
-  if (req.query.id) {
-    data = await UserRequestModel.findById(req.query.id);
+    if (req.query.id) {
+      data = await UserRequestModel.findById(req.query.id);
+    }
+
+    res.render("pages/user-management/form", {
+      title: "Form | User Management",
+      id: req.query.id,
+      data,
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
   }
-
-  res.render("pages/user-management/form", {
-    title: "Form | User Management",
-    id: req.query.id,
-    data,
-  });
 };
 
 /**
@@ -48,8 +67,8 @@ exports.getForm = async (req, res) => {
  *         description: Filter the list of users using user's name.
  */
 exports.getManyForm = async (req, res) => {
-  const { email } = req.query;
   try {
+    const { email } = req.query;
     let queryObj;
 
     if (email && email.length > 0) {
@@ -105,12 +124,9 @@ exports.getManyForm = async (req, res) => {
  *
  */
 exports.postManyForm = async (req, res) => {
-  const { email } = req.body;
-  console.log("hit");
-
-  console.log("body", req.body);
-
   try {
+    const { email } = req.body;
+
     const validationErrors = [];
     if (!validator.isEmail(req.body.email)) {
       validationErrors.push({ msg: "Please enter a valid email address." });
@@ -189,44 +205,44 @@ exports.postManyForm = async (req, res) => {
  */
 
 exports.putManyForm = async (req, res) => {
-  let { users } = req.body;
-
-  if (!users || users.length < 1) {
-    return res.json({
-      success: false,
-      message: "No user properties found on attach object.",
-    });
-  }
-
-  if (users.length > 10) {
-    return res.json({
-      success: false,
-      message: "Users array can not be more than 10 items.",
-    });
-  }
-  const usersRecordWithIdCount = users.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (users.length !== usersRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id property.",
-    });
-  }
-
-  const usersWithPasswordsCount = users.filter((u) => u.password).length;
-
-  if (usersWithPasswordsCount !== 0) {
-    return res.json({
-      success: false,
-      message: "Password cannot be changed in put.",
-    });
-  }
-
   try {
+    let { users } = req.body;
+
+    if (!users || users.length < 1) {
+      return res.json({
+        success: false,
+        message: "No user properties found on attach object.",
+      });
+    }
+
+    if (users.length > 10) {
+      return res.json({
+        success: false,
+        message: "Users array can not be more than 10 items.",
+      });
+    }
+    const usersRecordWithIdCount = users.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (users.length !== usersRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id property.",
+      });
+    }
+
+    const usersWithPasswordsCount = users.filter((u) => u.password).length;
+
+    if (usersWithPasswordsCount !== 0) {
+      return res.json({
+        success: false,
+        message: "Password cannot be changed in put.",
+      });
+    }
+
     const usersFromDb = await UserRequestModel.find({
       _id: { $in: users.map((p) => p._id) },
       isDeleted: {
@@ -304,21 +320,21 @@ exports.putManyForm = async (req, res) => {
  */
 
 exports.deleteManyForm = async (req, res) => {
-  const { users } = req.body;
-  const usersRecordWithIdCount = users.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (users.length !== usersRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id.",
-    });
-  }
-
   try {
+    const { users } = req.body;
+    const usersRecordWithIdCount = users.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (users.length !== usersRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id.",
+      });
+    }
+
     const usersFromDb = await UserRequestModel.find({
       _id: { $in: users.map((p) => p._id) },
     });
@@ -375,9 +391,9 @@ exports.deleteManyForm = async (req, res) => {
  *
  */
 exports.getSingleForm = async (req, res) => {
-  const { _id } = req.params;
-
   try {
+    const { _id } = req.params;
+
     const user = await UserRequestModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -420,7 +436,6 @@ exports.postSingleForm = async (req, res) => {
  */
 exports.postSingleFormApprove = async (req, res) => {
   try {
-  
     const { _id } = req.params;
 
     processApproveUserRequest(
@@ -439,14 +454,12 @@ exports.postSingleFormApprove = async (req, res) => {
             success: false,
             message: "No user created.",
           });
-
         },
         errorFN: () => {
           res.json({
             success: false,
             message: "Fatal Error logged.",
           });
-
         },
         successFN: () => {
           res.json({
@@ -498,10 +511,10 @@ exports.postSingleFormApprove = async (req, res) => {
  *
  */
 exports.postSingleFormReject = async (req, res) => {
-  let { body } = req;
-  const { _id } = req.params;
-
   try {
+    let { body } = req;
+    const { _id } = req.params;
+
     const user = await UserRequestModel.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       { type: "REJECTED" },
@@ -545,24 +558,24 @@ exports.postSingleFormReject = async (req, res) => {
  *
  */
 exports.putSingleForm = async (req, res) => {
-  let { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
-  if (body.password) {
-    return res.json({
-      success: false,
-      message: "You can't change passwords from this endpoint.",
-    });
-  }
-
   try {
+    let { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
+    if (body.password) {
+      return res.json({
+        success: false,
+        message: "You can't change passwords from this endpoint.",
+      });
+    }
+
     const user = await UserRequestModel.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       body,
@@ -601,17 +614,17 @@ exports.putSingleForm = async (req, res) => {
  *
  */
 exports.deleteSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const user = await UserRequestModel.findOne({
       _id,
       isDeleted: { $ne: true },

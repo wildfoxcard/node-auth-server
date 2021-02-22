@@ -1,0 +1,49 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'errors';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-bug
+        | Errors
+      p 
+        | Errors in this application show up here, and
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Errors
+
+  .row
+    .col-md-12
+      .tile
+        .tile-title
+        .tile-body
+          .table-responsive
+            table.table.table-hover.table-bordered#errorsList
+              thead
+                tr
+                  th Application
+                  th Message
+                  th Created At
+                  th Action
+
+    block head
+      link(rel='stylesheet', type='text/css', href='/css/lib/dataTables.bootstrap4.min.css')
+      link(rel='stylesheet', type='text/css', href='/css/lib/buttons.bootstrap4.min.css')
+
+    block specific-js
+      // Data table plugin
+      script.
+        app.errors = {};
+        app.errors.data = {};
+      script(type='text/javascript', src="/js/lib/jquery.dataTables.min.js")
+      script(type='text/javascript', src="/js/lib/dataTables.bootstrap4.min.js")
+      script(type='text/javascript', src="/js/lib/buttons.bootstrap4.min.js")
+      script(type='text/javascript', src='/js/views/pages/errors/list.js')

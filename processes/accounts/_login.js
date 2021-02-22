@@ -3,7 +3,8 @@ const validator = require("validator");
 
 exports.processLogin = (
   { email, password },
-  { validationFailedFN, signInErrorFN, noUserErrorFN, successFN }
+  { validationFailedFN, signInErrorFN, noUserErrorFN, successFN },
+  { req, res, next }
 ) => {
   const validationErrors = [];
   if (!validator.isEmail(email))
@@ -27,5 +28,5 @@ exports.processLogin = (
     }
 
     return successFN(err, user);
-  });
+  })(req, res, next);
 };

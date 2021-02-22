@@ -1,25 +1,43 @@
-
 const PermissionModel = require("../../models/Permission");
-const { errorReporter } = require("../../config/errorReporter");
+const {
+  errorReporter,
+  errorReporterWithHtml,
+} = require("../../processes/errorReporter");
 
 exports.viewIndex = async (req, res) => {
-  res.render("pages/permissions/list", {
-    title: "Permissions",
-  });
+  try {
+    res.render("pages/permissions/list", {
+      title: "Permissions",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.viewForm = async (req, res) => {
-  let data;
+  try {
+    let data;
 
-  if (req.query.id) {
-    data = await PermissionModel.findById(req.query.id);
+    if (req.query.id) {
+      data = await PermissionModel.findById(req.query.id);
+    }
+
+    res.render("pages/permissions/form", {
+      title: "Form | Permissions",
+      id: req.query.id,
+      data,
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
   }
-
-  res.render("pages/permissions/form", {
-    title: "Form | Permissions",
-    id: req.query.id,
-    data
-  });
 };
 
 /**
@@ -46,11 +64,9 @@ exports.viewForm = async (req, res) => {
  *         description: Filter the list of permissions using permission's name.
  */
 exports.getManyForm = async (req, res) => {
-  const { name } = req.query;
   try {
+    const { name } = req.query;
     let permissions;
-
-    console.log("name", name);
 
     if (name && name.length > 0) {
       permissions = await PermissionModel.find({
@@ -97,31 +113,29 @@ exports.getManyForm = async (req, res) => {
  *
  */
 exports.postManyForm = async (req, res) => {
-  const { name } = req.body;
-
-  console.log("permissions body", req.body);
-
-  if (!name || name.length === 1) {
-    return res.json({
-      success: false,
-      message: "Please enter a name for a permissions",
-    });
-  }
-
-  const existingPermission = await PermissionModel.findOne({ name });
-
-  if (existingPermission) {
-    return res.json({
-      success: false,
-      message: "Permission already exist",
-    });
-  }
-
-  const newPermission = new PermissionModel({
-    name,
-  });
-
   try {
+    const { name } = req.body;
+
+    if (!name || name.length === 1) {
+      return res.json({
+        success: false,
+        message: "Please enter a name for a permissions",
+      });
+    }
+
+    const existingPermission = await PermissionModel.findOne({ name });
+
+    if (existingPermission) {
+      return res.json({
+        success: false,
+        message: "Permission already exist",
+      });
+    }
+
+    const newPermission = new PermissionModel({
+      name,
+    });
+
     await newPermission.save();
 
     res.status(201).json({
@@ -173,35 +187,35 @@ exports.postManyForm = async (req, res) => {
  */
 
 exports.putManyForm = async (req, res) => {
-  let { permissions } = req.body;
-
-  if (!permissions || permissions.length < 1) {
-    return res.json({
-      success: false,
-      message: "Not permission properties found on attach object.",
-    });
-  }
-
-  if (permissions.length > 10) {
-    return res.json({
-      success: false,
-      message: "Permissions array can not be more than 10 items.",
-    });
-  }
-  const permissionsRecordWithIdCount = permissions.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (permissions.length !== permissionsRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id property.",
-    });
-  }
-
   try {
+    let { permissions } = req.body;
+
+    if (!permissions || permissions.length < 1) {
+      return res.json({
+        success: false,
+        message: "Not permission properties found on attach object.",
+      });
+    }
+
+    if (permissions.length > 10) {
+      return res.json({
+        success: false,
+        message: "Permissions array can not be more than 10 items.",
+      });
+    }
+    const permissionsRecordWithIdCount = permissions.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (permissions.length !== permissionsRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id property.",
+      });
+    }
+
     const permissionsFromDb = await PermissionModel.find({
       _id: { $in: permissions.map((p) => p._id) },
       isDeleted: {
@@ -276,21 +290,21 @@ exports.putManyForm = async (req, res) => {
  */
 
 exports.deleteManyForm = async (req, res) => {
-  const { permissions } = req.body;
-  const permissionsRecordWithIdCount = permissions.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (permissions.length !== permissionsRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id.",
-    });
-  }
-
   try {
+    const { permissions } = req.body;
+    const permissionsRecordWithIdCount = permissions.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (permissions.length !== permissionsRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id.",
+      });
+    }
+
     const permissionsFromDb = await PermissionModel.find({
       _id: { $in: permissions.map((p) => p._id) },
     });
@@ -351,11 +365,9 @@ exports.deleteManyForm = async (req, res) => {
  *
  */
 exports.getSingleForm = async (req, res) => {
-  const { _id } = req.params;
-
-  console.log("id", req.params._id);
-
   try {
+    const { _id } = req.params;
+
     const permission = await PermissionModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -406,19 +418,17 @@ exports.postSingleForm = async (req, res) => {
  *
  */
 exports.putSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  console.log("body", body)
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const permission = await PermissionModel.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       { name: body.name },
@@ -457,17 +467,17 @@ exports.putSingleForm = async (req, res) => {
  *
  */
 exports.deleteSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const permission = await PermissionModel.findOne({
       _id,
       isDeleted: { $ne: true },

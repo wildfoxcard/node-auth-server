@@ -12,7 +12,7 @@ const {
   sendEmail,
   sendEmailWithSecurityDowngrade,
 } = require("../processes/send-email");
-const { errorReporter } = require("../config/errorReporter");
+const { errorReporter } = require("../processes/errorReporter");
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 

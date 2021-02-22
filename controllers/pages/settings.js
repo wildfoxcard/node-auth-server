@@ -1,15 +1,25 @@
-
 const Settings = require("../../models/Settings");
-const { errorReporter } = require("../../config/errorReporter");
+const {
+  errorReporter,
+  errorReporterWithHtml,
+} = require("../../processes/errorReporter");
 
 /**
  * GET /
  * Home page.
  */
 exports.viewGeneral = (req, res) => {
-  res.render("pages/settings/settings-index", {
-    title: "General | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-index", {
+      title: "General | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 /**
@@ -90,9 +100,17 @@ exports.postGeneral = async (req, res) => {
 };
 
 exports.viewNewUsers = (req, res) => {
-  res.render("pages/settings/settings-new-users", {
-    title: "New Users | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-new-users", {
+      title: "New Users | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 /**
@@ -164,7 +182,7 @@ exports.postNewUsers = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: newSettings.newUsers
+      data: newSettings.newUsers,
     });
   } catch (err) {
     errorReporter({
@@ -176,21 +194,45 @@ exports.postNewUsers = async (req, res) => {
 };
 
 exports.viewExports = (req, res) => {
-  res.render("pages/settings/settings-exports", {
-    title: "Exports | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-exports", {
+      title: "Exports | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.viewImports = (req, res) => {
-  res.render("pages/settings/settings-imports", {
-    title: "Imports | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-imports", {
+      title: "Imports | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.viewEmailTemplates = (req, res) => {
-  res.render("pages/settings/settings-email-templates", {
-    title: "Email Templates | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-email-templates", {
+      title: "Email Templates | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 /**
@@ -290,9 +332,17 @@ exports.postEmailTemplates = async (req, res) => {
 };
 
 exports.viewPasswordPolicy = (req, res) => {
-  res.render("pages/settings/settings-password-policy", {
-    title: "Password Policy | Settings",
-  });
+  try {
+    res.render("pages/settings/settings-password-policy", {
+      title: "Password Policy | Settings",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 /**

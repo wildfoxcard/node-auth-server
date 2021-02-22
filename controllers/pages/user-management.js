@@ -3,26 +3,42 @@ const validator = require("validator");
 const UserModel = require("../../models/User");
 const PermissionModel = require("../../models/Permission");
 const RoleModel = require("../../models/Role");
-const { errorReporter } = require("../../config/errorReporter");
+const { errorReporter } = require("../../processes/errorReporter");
 
 exports.getIndex = (req, res) => {
-  res.render("pages/user-management/list", {
-    title: "User Management",
-  });
+  try {
+    res.render("pages/user-management/list", {
+      title: "User Management",
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
+  }
 };
 
 exports.getForm = async (req, res) => {
-  let data;
+  try {
+    let data;
 
-  if (req.query.id) {
-    data = await UserModel.findById(req.query.id);
+    if (req.query.id) {
+      data = await UserModel.findById(req.query.id);
+    }
+
+    res.render("pages/user-management/form", {
+      title: "Form | User Management",
+      id: req.query.id,
+      data,
+    });
+  } catch (err) {
+    errorReporterWithHtml({
+      err,
+      res,
+      message: "Fatal Error Logged.",
+    });
   }
-
-  res.render("pages/user-management/form", {
-    title: "Form | User Management",
-    id: req.query.id,
-    data,
-  });
 };
 
 /**
@@ -49,8 +65,8 @@ exports.getForm = async (req, res) => {
  *         description: Filter the list of users using user's name.
  */
 exports.getManyForm = async (req, res) => {
-  const { email } = req.query;
   try {
+    const { email } = req.query;
     let queryObj;
 
     if (email && email.length > 0) {
@@ -112,9 +128,9 @@ exports.getManyForm = async (req, res) => {
  *
  */
 exports.postManyForm = async (req, res) => {
-  const { email } = req.body;
-
   try {
+    const { email } = req.body;
+
     const validationErrors = [];
     if (!validator.isEmail(req.body.email)) {
       validationErrors.push({ msg: "Please enter a valid email address." });
@@ -212,44 +228,44 @@ exports.postManyForm = async (req, res) => {
  */
 
 exports.putManyForm = async (req, res) => {
-  let { users } = req.body;
-
-  if (!users || users.length < 1) {
-    return res.json({
-      success: false,
-      message: "No user properties found on attach object.",
-    });
-  }
-
-  if (users.length > 10) {
-    return res.json({
-      success: false,
-      message: "Users array can not be more than 10 items.",
-    });
-  }
-  const usersRecordWithIdCount = users.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (users.length !== usersRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id property.",
-    });
-  }
-
-  const usersWithPasswordsCount = users.filter((u) => u.password).length;
-
-  if (usersWithPasswordsCount !== 0) {
-    return res.json({
-      success: false,
-      message: "Password cannot be changed in put.",
-    });
-  }
-
   try {
+    let { users } = req.body;
+
+    if (!users || users.length < 1) {
+      return res.json({
+        success: false,
+        message: "No user properties found on attach object.",
+      });
+    }
+
+    if (users.length > 10) {
+      return res.json({
+        success: false,
+        message: "Users array can not be more than 10 items.",
+      });
+    }
+    const usersRecordWithIdCount = users.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (users.length !== usersRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id property.",
+      });
+    }
+
+    const usersWithPasswordsCount = users.filter((u) => u.password).length;
+
+    if (usersWithPasswordsCount !== 0) {
+      return res.json({
+        success: false,
+        message: "Password cannot be changed in put.",
+      });
+    }
+
     let profile, roles, permissions;
 
     if (users.profile) {
@@ -344,21 +360,21 @@ exports.putManyForm = async (req, res) => {
  */
 
 exports.deleteManyForm = async (req, res) => {
-  const { users } = req.body;
-  const usersRecordWithIdCount = users.filter((item) => {
-    if (item._id) {
-      return item;
-    }
-  }).length;
-
-  if (users.length !== usersRecordWithIdCount) {
-    return res.json({
-      success: false,
-      message: "Please ensure every record has an _id.",
-    });
-  }
-
   try {
+    const { users } = req.body;
+    const usersRecordWithIdCount = users.filter((item) => {
+      if (item._id) {
+        return item;
+      }
+    }).length;
+
+    if (users.length !== usersRecordWithIdCount) {
+      return res.json({
+        success: false,
+        message: "Please ensure every record has an _id.",
+      });
+    }
+
     const usersFromDb = await UserModel.find({
       _id: { $in: users.map((p) => p._id) },
     });
@@ -415,9 +431,9 @@ exports.deleteManyForm = async (req, res) => {
  *
  */
 exports.getSingleForm = async (req, res) => {
-  const { _id } = req.params;
-
   try {
+    const { _id } = req.params;
+
     const user = await UserModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -475,24 +491,24 @@ exports.postSingleForm = async (req, res) => {
  *
  */
 exports.putSingleForm = async (req, res) => {
-  let { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
-  if (body.password) {
-    return res.json({
-      success: false,
-      message: "You can't change passwords from this endpoint.",
-    });
-  }
-
   try {
+    let { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
+    if (body.password) {
+      return res.json({
+        success: false,
+        message: "You can't change passwords from this endpoint.",
+      });
+    }
+
     const user = await UserModel.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       body,
@@ -531,17 +547,17 @@ exports.putSingleForm = async (req, res) => {
  *
  */
 exports.deleteSingleForm = async (req, res) => {
-  const { body } = req;
-  const { _id } = req.params;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
   try {
+    const { body } = req;
+    const { _id } = req.params;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
     const user = await UserModel.findOne({
       _id,
       isDeleted: { $ne: true },
@@ -604,25 +620,26 @@ exports.deleteSingleForm = async (req, res) => {
  */
 
 exports.postSingleAddPermissionToUser = async (req, res) => {
-  const { body } = req;
-  const _permissionId = body._id;
-  const _userId = req.params._id;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
-  if (!_permissionId) {
-    return res.json({
-      success: false,
-      message: "request requires a json object with an _id of permissions _id.",
-    });
-  }
-
   try {
+    const { body } = req;
+    const _permissionId = body._id;
+    const _userId = req.params._id;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
+    if (!_permissionId) {
+      return res.json({
+        success: false,
+        message:
+          "request requires a json object with an _id of permissions _id.",
+      });
+    }
+
     const permissionsWithSameId = await PermissionModel.findById(_permissionId);
 
     if (permissionsWithSameId === null) {
@@ -677,10 +694,10 @@ exports.postSingleAddPermissionToUser = async (req, res) => {
  */
 
 exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
-  const _permissionId = req.params._permissionsId;
-  const _userId = req.params._id;
-
   try {
+    const _permissionId = req.params._permissionsId;
+    const _userId = req.params._id;
+
     const usersWithSameId = await UserModel.findById(_userId);
 
     if (usersWithSameId === null) {
@@ -740,25 +757,26 @@ exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
  */
 
 exports.postSingleAddRoleToUser = async (req, res) => {
-  const { body } = req;
-  const _roleId = body._id;
-  const _userId = req.params._id;
-
-  if (!body) {
-    return res.json({
-      success: false,
-      message: "Did you attach anything to this request?",
-    });
-  }
-
-  if (!_roleId) {
-    return res.json({
-      success: false,
-      message: "request requires a json object with an _id of permissions _id.",
-    });
-  }
-
   try {
+    const { body } = req;
+    const _roleId = body._id;
+    const _userId = req.params._id;
+
+    if (!body) {
+      return res.json({
+        success: false,
+        message: "Did you attach anything to this request?",
+      });
+    }
+
+    if (!_roleId) {
+      return res.json({
+        success: false,
+        message:
+          "request requires a json object with an _id of permissions _id.",
+      });
+    }
+
     const roleWithSameId = await RoleModel.findById(_roleId);
 
     if (roleWithSameId === null) {
@@ -813,10 +831,10 @@ exports.postSingleAddRoleToUser = async (req, res) => {
  */
 
 exports.deleteSingleRoleInArrayForUser = async (req, res) => {
-  const _roleId = req.params._rolesId;
-  const _userId = req.params._id;
-
   try {
+    const _roleId = req.params._rolesId;
+    const _userId = req.params._id;
+
     const usersWithSameId = await UserModel.findById(_userId);
 
     if (usersWithSameId === null) {
