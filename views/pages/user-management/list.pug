@@ -25,12 +25,35 @@ block content
       .tile
         .tile-title
           a.btn.btn-primary(href="/user-management/form") New User
+          .float-right 
+          
+            form#search
+              .form-group
+                .input-group
+                  input#search-input.form-control(type='text', placeholder='user email')
+                  .input-group-append
+                    //- span.input-group-text 
+                    button.btn.btn-secondary(type="submit") Search
+          
+          
+          .form-group 
+            .input-group
+              label.mr-2(for='filter') Filter
+              select#filter
+                option All
+                option Admin
+                option Normal Users
+                option Test Users
+                option Application Users
+          
         .tile-body
           .table-responsive
             table.table.table-hover.table-bordered#leadManagementTable
               thead
                 tr
                   th Email
+                  th Type
+                  th Is Admin 
                   th Action
 
   h3 User Requests

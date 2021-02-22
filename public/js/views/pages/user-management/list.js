@@ -2,7 +2,9 @@ app.userRequest = {};
 app.userRequest.approve = (id, email, name) => {
   swal({
     title: "Are you sure?",
-    text: `You are about to create a user. '${name || "The User"}' will be emailed at '${email}'`,
+    text: `You are about to create a user. '${
+      name || "The User"
+    }' will be emailed at '${email}'`,
     type: "success",
     showCancelButton: true,
     buttons: ["No, cancel plx!", "Yes, I am sure!"],
@@ -13,7 +15,6 @@ app.userRequest.approve = (id, email, name) => {
     confirmButtonClass: "btn-success",
   }).then(function (isConfirm) {
     if (isConfirm) {
-
       $.ajax({
         url: `/api/v1/user-requests/${id}/approve/`,
         type: "POST",
@@ -29,10 +30,8 @@ app.userRequest.approve = (id, email, name) => {
             closeOnConfirm: false,
             closeOnCancel: false,
             confirmButtonClass: "btn-success",
-          })
-          .then(function (isConfirm) {
-            window.location.href= `/user-management/form?id=${id}`
-
+          }).then(function (isConfirm) {
+            window.location.href = `/user-management/form?id=${id}`;
           });
           // $("#rolesInUserTable").DataTable().ajax.reload();
           // window.location.href = `/roles/form?id=${$("#_id").val()}`;
@@ -42,12 +41,14 @@ app.userRequest.approve = (id, email, name) => {
       swal("Cancelled", "Nothing has changed.", "error");
     }
   });
-}
+};
 
 app.userRequest.reject = (id, email, name) => {
   swal({
     title: "Are you sure?",
-    text: `You are about to reject a user request. Name: '${name || "The User"}', Email: '${email}'`,
+    text: `You are about to reject a user request. Name: '${
+      name || "The User"
+    }', Email: '${email}'`,
     type: "danger",
     showCancelButton: true,
     buttons: ["No, cancel plx!", "Yes, I am sure!"],
@@ -58,18 +59,20 @@ app.userRequest.reject = (id, email, name) => {
     confirmButtonClass: "btn-success",
   }).then(function (isConfirm) {
     if (isConfirm) {
-
       $.ajax({
         url: `/api/v1/user-requests/${id}/reject/`,
         type: "POST",
         success: () => {
-          $.notify({
-            title: "Update Complete : ",
-            message: `'${email}' was rejected.`,
-            icon: 'fa fa-check' 
-          },{
-            type: "info"
-          });
+          $.notify(
+            {
+              title: "Update Complete : ",
+              message: `'${email}' was rejected.`,
+              icon: "fa fa-check",
+            },
+            {
+              type: "info",
+            }
+          );
 
           // $("#rolesInUserTable").DataTable().ajax.reload();
           // window.location.href = `/roles/form?id=${$("#_id").val()}`;
@@ -79,10 +82,56 @@ app.userRequest.reject = (id, email, name) => {
       swal("Cancelled", "Nothing has changed.", "error");
     }
   });
+};
+
+const getFilterDataObj = () => {
+  const filter = $("#filter").val();
+
+  switch (filter) {
+    case "All":
+      return {};
+    case "Admin":
+      return { isAdmin: true };
+    case "Normal Users":
+      return { type: "NORMAL" };
+    case "Test Users":
+      return { type: "TEST" };
+    case "Application Users":
+      return { type: "APPLICATION" };
+  }
+};
+
+const search = () => {
+  $.get({
+    url: "/api/v1/users",
+    data: Object.assign(
+      {
+        email: $("#search-input").val(),
+      },
+      getFilterDataObj()
+    ),
+    success: (results) => {
+      if (results.success) {
+        $("#leadManagementTable").dataTable().fnClearTable();
+        if (results.data) {
+          results.data.map((per) => {
+            $("#leadManagementTable").dataTable().fnAddData(per);
+          });
+        }
+      }
+    },
+  });
 }
 
-
 $(function () {
+  $("#search").on("submit", (e) => {
+    e.preventDefault();
+    search()
+  });
+  $("#filter").on("change", (e) => {
+    e.preventDefault();
+    search()
+  });
   // #userRequestTable
   $("#userRequestTable").DataTable({
     sDom: "t",
@@ -91,11 +140,11 @@ $(function () {
       type: "GET",
       cache: false,
       dataSrc: function (json) {
-          console.log('json', json, json.data)
+        console.log("json", json, json.data);
         return json.data;
       },
     },
-    
+
     columns: [
       {
         data: "email",
@@ -115,43 +164,58 @@ $(function () {
         data: null,
         display: "Action",
         render: function (data, type, row, meta) {
-          let approveButton = $(`<div class="btn btn-success mr-3" onclick="app.userRequest.approve('${data._id}', '${data.email}', '${data.name}')">`).html("Approve")
+          let approveButton = $(
+            `<div class="btn btn-success mr-3" onclick="app.userRequest.approve('${data._id}', '${data.email}', '${data.name}')">`
+          ).html("Approve");
 
-          let rejectButton = $(`<div class="btn btn-danger" onclick="app.userRequest.reject('${data._id}', '${data.email}', '${data.name}')">`).html("Reject").on(`click`, () => {
-            console.log('reject button clicked')
-          })
+          let rejectButton = $(
+            `<div class="btn btn-danger" onclick="app.userRequest.reject('${data._id}', '${data.email}', '${data.name}')">`
+          )
+            .html("Reject")
+            .on(`click`, () => {
+              console.log("reject button clicked");
+            });
 
-          return $('<div>').append(approveButton).append(rejectButton).prop("outerHTML")
+          return $("<div>")
+            .append(approveButton)
+            .append(rejectButton)
+            .prop("outerHTML");
         },
       },
     ],
   });
 
-
   $("#leadManagementTable").DataTable({
-      sDom: "t",
-      ajax: {
-        url: "/api/v1/users",
-        type: "GET",
-        cache: false,
-        dataSrc: function (json) {
-            // console.log('json', json, json.data)
-          return json.data;
+    sDom: "t",
+    ajax: {
+      url: "/api/v1/users",
+      type: "GET",
+      cache: false,
+      dataSrc: function (json) {
+        // console.log('json', json, json.data)
+        return json.data;
+      },
+    },
+    columns: [
+      {
+        data: "email",
+        display: "Email",
+      },
+      {
+        data: "type",
+        display: "Type",
+      },
+      {
+        data: "isAdmin",
+        display: "Is Admin",
+      },
+      {
+        data: null,
+        display: "Action",
+        render: function (data, type, row, meta) {
+          return `<a class="btn btn-warning" href="/user-management/form?id=${row._id}">Edit</a>`;
         },
       },
-      columns: [
-        {
-          data: "email",
-          display: "Email",
-        },
-        {
-          data: null,
-          display: "Action",
-          render: function (data, type, row, meta) {
-            return `<a class="btn btn-warning" href="/user-management/form?id=${row._id}">Edit</a>`;
-          },
-        },
-      ],
-    });
+    ],
   });
-  
+});

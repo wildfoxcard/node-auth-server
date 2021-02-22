@@ -66,7 +66,7 @@ exports.getForm = async (req, res) => {
  */
 exports.getManyForm = async (req, res) => {
   try {
-    const { email } = req.query;
+    const { email, isAdmin, type } = req.query;
     let queryObj;
 
     if (email && email.length > 0) {
@@ -82,6 +82,14 @@ exports.getManyForm = async (req, res) => {
           $ne: true,
         },
       };
+    }
+
+    if (isAdmin) {
+      queryObj.isAdmin = true;
+    }
+
+    if (type) {
+      queryObj.type = type;
     }
 
     const users = await UserModel.find(queryObj)

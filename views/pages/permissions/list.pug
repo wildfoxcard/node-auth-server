@@ -25,6 +25,14 @@ block content
       .tile
         .tile-title
           a.btn.btn-primary(href="/permissions/form") New Permission
+          .float-right 
+            form#search
+              .form-group
+                .input-group
+                  input#search-input.form-control(type='text', placeholder='permission name')
+                  .input-group-append
+                    //- span.input-group-text 
+                    button.btn.btn-secondary(type="submit") Search
         .tile-body
           .table-responsive
             table.table.table-hover.table-bordered#permissionsList
