@@ -1,8 +1,16 @@
-extends ../layout
+extends ../layouts/_layout.pug
+
+block variables
+  - var activePage = 'api-examples';
 
 block content
   .pb-2.mt-2.mb-4.border-bottom
     h3 API Examples
+
+  .alert.alert-info 
+    p This project was built on&nbsp;
+      a(href="https://github.com/sahat/hackathon-starter" target="_blank") sahat hackathon starter
+      | . I have moved this section here and have done nothing to the code besides adding an error pipeline.
 
   .row
     .col-md-4

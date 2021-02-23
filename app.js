@@ -448,7 +448,7 @@ app.use('/docs/rest-api', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 /**
  * API examples routes.
  */
-app.get("/api", passportConfig.isAdmin, apiController.getApi);
+app.get("/docs/api/", passportConfig.isAdmin, apiController.getApi);
 app.get("/api/lastfm", passportConfig.isAdmin, apiController.getLastfm);
 app.get(
   "/api/nyt",
