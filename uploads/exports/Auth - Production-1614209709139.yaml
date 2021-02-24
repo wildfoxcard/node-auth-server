@@ -1,0 +1,79 @@
+permissions:
+  - Accounts - View
+  - Accounts - Edit
+roles:
+  - Accounts Manager
+  - Technician
+testUsers:
+  - password: Password1
+    email: awesome@awesome.com
+    permissions:
+      - Accounts - View
+    roles:
+      - Accounts Manager
+      - Technician
+    profile:
+      $init: true
+applicationUsers:
+  - password: Password1
+    email: application1@gmail.com
+    permissions: []
+    roles: []
+    profile:
+      $init: true
+settings:
+  serverName: Auth - Production
+  serverMainUrl: /dashboard
+  newUsersType: '["ANYONE"]'
+  varsHost: http://localhost:8080
+  varsFromEmail: ''
+  varsCompany: our company
+  varsUsername: buddy
+  emailVerificationSubject: Please verify your email address on Hackathon Starter
+  emailVerificationMessage: >-
+    Thank you for registering with hackathon-starter.
+
+
+    This verify your email address please click on the following link, or paste
+    this into your browser:
+
+
+    http://{{host}}/account/verify/{{token}}
+
+
+    Thank you
+  passwordResetSubject: Reset your password on Hackathon Starter
+  passwordResetMessage: >
+    You are receiving this email because you (or someone else) have requested
+    the reset of the password for your account.
+
+
+    Please click on the following link, or paste this into your browser to
+    complete the process:
+
+
+    {{host}}/reset/{{token}}
+
+
+    If you did not request this, please ignore this email and your password will
+    remain unchanged.
+  resetPasswordEmailSubject: Your Hackathon Starter password has been changed
+  userApprovedSubject: User Request Approved
+  userApprovedMessage: http://localhost:8080
+  inviteUserSubject: Welcome aboard
+  inviteUserMessage: >+
+    You are receiving this email because you have been invited to become a user
+    by an admin. Please confirm below.
+
+
+    Please click on the following link, or paste this into your browser to
+    complete the process:
+
+
+    {{host}}/reset/{{token}}
+
+  passwordLength: '6'
+  shouldHaveUppercaseLetter: 'false'
+  shouldHaveLowercaseLetter: 'false'
+  shouldHaveNumber: 'false'
+  shouldHaveSymbol: 'false'

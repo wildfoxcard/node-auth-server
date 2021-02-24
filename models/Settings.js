@@ -14,9 +14,6 @@ const settingsSchema = new mongoose.Schema(
         type:["ANYONE", "REQUEST", "MANUAL"],
         default: "ANYONE",
       },
-      password: {
-        type: String,
-      },
     },
     emailTemplates: {
       vars: {
@@ -75,7 +72,15 @@ const settingsSchema = new mongoose.Schema(
       userApprovedMessage: {
         type: String,
         default: "You are receiving this email because your request to become a user has been approved. Please confirm below.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\n{{host}}/reset/{{token}}\n\n",
-      }
+      },
+      inviteUserSubject: {
+        type: String,
+        default: "Welcome aboard",
+      },
+      inviteUserMessage: {
+        type: String,
+        default: "You are receiving this email because you have been invited to become a user by an admin. Please confirm below.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\n{{host}}/reset/{{token}}\n\n",
+      },
     },
     general: {
       serverName: {

@@ -1,4 +1,5 @@
 const validator = require("validator");
+const Settings = require("../../models/Settings");
 const User = require("../../models/User");
 const {
   sendEmail,
@@ -57,6 +58,8 @@ exports.processResetPassword = (
     }
 
     const { emailTemplates } = Settings.findOne({});
+
+    console.log('settings', emailTemplates)
 
     const mailOptions = {
       to: user.email,

@@ -27,12 +27,315 @@ block content
               include ../../includes/settings-menu
 
             .col-md-9
-              h2 Exports
+              h2.mb-5 Exports
+
+              .alert.alert-danger All test users can be exported with one default password, please don't use that password in production.
+
+              .form-group
+                label.control-label File Name
+                .form-group
+                  .input-group
+                    input#filename.form-control(type='text', placeholder='file-name', value=setting.general.serverName)
+                    .input-group-append
+                      span.input-group-text .yaml
+                
+                
+              .form-group
+                label.control-label Default Password for all users (needs to pass password policy)
+                .form-group
+                  .input-group
+                    input#defaultPassword.form-control(type='text', value='Password1')
+              br
+              .form-check
+                label.form-check-label
+                  input#selectAll.form-check-input(type='checkbox')
+                  | Select All
+              br
+              br
+              if permissions
+                .tile
+                  h3.tile-title Permissions
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Name
+                    tbody
+                      each permission, index in permissions
+                        tr
+                          td 
+                            .form-check
+                              input.form-check-input(type='checkbox', name="permissions", value=permission.name)
+                          td= permission.name                        
+
+                
+              if roles
+                .tile
+                  h3.tile-title Roles
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Name
+                    tbody
+                      each role, index in roles
+                        tr
+                          td 
+                            .form-check
+                              input.form-check-input(type='checkbox', name="roles", value=role.name)
+                          td= role.name                        
+
+                
+              if testUsers
+                .tile
+                  h3.tile-title Test Users
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Email
+                        th Is Admin
+                        th Roles 
+                        th Permissions
+                    tbody
+                      each tu, index in testUsers
+                        tr
+                          td 
+                            .form-check
+                              input.form-check-input(type='checkbox', name="testUsers", value= tu.email)
+                          td= tu.email   
+                          td= tu.isAdmin
+                          td 
+                            if tu.permissions 
+                              ul
+                                each p, i in tu.permissions 
+                                  li= p.name 
+                          td 
+                            if tu.roles
+                              ul 
+                                each r, i in tu.roles 
+                                  li= r.name 
+              if applicationUsers
+                .tile
+                  h3.tile-title Application Users
+                  
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Email
+                        th Is Admin
+                        th Roles 
+                        th Permissions
+                    tbody
+                      each au, index in applicationUsers
+                        tr
+                          td 
+                            .form-check
+                              input.form-check-input(type='checkbox', name="applicationUsers", value=au.email)
+                          td= au.email  
+                          td= au.isAdmin
+                          td 
+                            if au.permissions 
+                              ul
+                                each p, i in au.permissions 
+                                  li= p.name
+                          td 
+                            if au.roles
+                              ul 
+                                each r, i in au.roles 
+                                  li= r.name 
+
+
+                        
+              if setting
+                .tile
+                  h3.tile-title Settings General
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Key
+                        th Value
+                    tbody
+                      tr
+                        td 
+                          .form-check
+                            input#serverName.form-check-input(type='checkbox', value= setting.general.serverName)
+                        td Server Name
+                        th= setting.general.serverName  
+                      tr
+                        td 
+                          .form-check
+                            input#serverMainUrl.form-check-input(type='checkbox', value= setting.general.serverMainUrl)
+                        td Server Main Url
+                        th= setting.general.serverMainUrl   
+                        
+                        
+              if setting
+                .tile
+                  h3.tile-title Settings New Users
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Key
+                        th Value
+                    tbody
+                      tr
+                        td 
+                          .form-check
+                            input#newUsersType.form-check-input(type='checkbox', value= setting.newUsers.type )
+                        td Type
+                        th= setting.newUsers.type  
+
+                                                
+              if setting
+                .tile
+                  h3.tile-title Settings Email Templates
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Key
+                        th Value
+                    tbody
+                      tr
+                        td 
+                          .form-check
+                            input#varsHost.form-check-input(type='checkbox', value= setting.emailTemplates.vars.host)
+                        td Var Host
+                        th= setting.emailTemplates.vars.host
+                      tr
+                        td 
+                          .form-check
+                            input#varsFromEmail.form-check-input(type='checkbox', value=setting.emailTemplates.vars.fromEmail || "")
+                        td Var From Email
+                        th= setting.emailTemplates.vars.fromEmail || ""
+                      tr
+                        td 
+                          .form-check
+                            input#varsCompany.form-check-input(type='checkbox', value= setting.emailTemplates.vars.company)
+                        td Var Company
+                        th= setting.emailTemplates.vars.company
+                      tr
+                        td 
+                          .form-check
+                            input#varsUsername.form-check-input(type='checkbox', value= setting.emailTemplates.vars.username)
+                        td Var Username
+                        th= setting.emailTemplates.vars.username
+                      tr
+                        td 
+                          .form-check
+                            input#emailVerificationSubject.form-check-input(type='checkbox', value= setting.emailTemplates.emailVerificationSubject)
+                        td Email Verification Subject
+                        th= setting.emailTemplates.emailVerificationSubject
+                      tr
+                        td 
+                          .form-check
+                            input#emailVerificationMessage.form-check-input(type='checkbox', value= setting.emailTemplates.emailVerificationMessage)
+                        td Email Verification Message
+                        th= setting.emailTemplates.emailVerificationMessage
+                      tr
+                        td 
+                          .form-check
+                            input#passwordResetSubject.form-check-input(type='checkbox', value= setting.emailTemplates.passwordResetSubject)
+                        td Password Reset Subject
+                        th= setting.emailTemplates.passwordResetSubject
+                      tr
+                        td 
+                          .form-check
+                            input#passwordResetMessage.form-check-input(type='checkbox', value= setting.emailTemplates.passwordResetMessage)
+                        td Password Reset Message
+                        th= setting.emailTemplates.passwordResetMessage
+                      tr
+                        td 
+                          .form-check
+                            input#resetPasswordEmailSubject.form-check-input(type='checkbox', value= setting.emailTemplates.resetPasswordEmailSubject)
+                        td Password Was Reset Sucessfully Subject
+                        th= setting.emailTemplates.resetPasswordEmailSubject
+                      tr
+                        td 
+                          .form-check
+                            input#resetPasswordEmailMessage.form-check-input(type='checkbox', value= setting.emailTemplates.resetPasswordEmailMessage)
+                        td Password Was Reset Sucessfully Message
+                        th= setting.emailTemplates.resetPasswordEmailMessage
+                      tr
+                        td 
+                          .form-check
+                            input#userApprovedSubject.form-check-input(type='checkbox', value= setting.emailTemplates.userApprovedSubject)
+                        td User Request Approved Subject
+                        th= setting.emailTemplates.userApprovedSubject
+                      tr
+                        td 
+                          .form-check
+                            input#userApprovedMessage.form-check-input(type='checkbox', value= setting.emailTemplates.userApprovedMessage)
+                        td User Request Approved Message
+                        th= setting.emailTemplates.userApprovedMessage
+                      tr
+                        td 
+                          .form-check
+                            input#inviteUserSubject.form-check-input(type='checkbox', value= setting.emailTemplates.inviteUserSubject)
+                        td User Invite Subject
+                        th= setting.emailTemplates.inviteUserSubject
+                      tr
+                        td 
+                          .form-check
+                            input#inviteUserMessage.form-check-input(type='checkbox', value= setting.emailTemplates.inviteUserMessage)
+                        td User Invite Message
+                        th= setting.emailTemplates.inviteUserMessage
+
+
+
+                        
+              if setting
+                .tile
+                  h3.tile-title Settings Password Policy
+                  table.table
+                    thead
+                      tr
+                        th Selected
+                        th Key
+                        th Value
+                    tbody
+                      tr
+                        td 
+                          .form-check
+                            input#passwordLength.form-check-input(type='checkbox', value= setting.passwordPolicy.passwordLength  )
+                        td Password Length
+                        th= setting.passwordPolicy.passwordLength  
+                      tr
+                        td 
+                          .form-check
+                            input#shouldHaveUppercaseLetter.form-check-input(type='checkbox', value= setting.passwordPolicy.shouldHaveUppercaseLetter.toString() )
+                        td Should Have Uppercase Letter
+                        th= setting.passwordPolicy.shouldHaveUppercaseLetter  
+                      tr
+                        td 
+                          .form-check
+                            input#shouldHaveLowercaseLetter.form-check-input(type='checkbox', value= setting.passwordPolicy.shouldHaveLowercaseLetter.toString() )
+                        td Should Have Lowercase Letter
+                        th= setting.passwordPolicy.shouldHaveLowercaseLetter  
+                      tr
+                        td 
+                          .form-check
+                            input#shouldHaveNumber.form-check-input(type='checkbox', value= setting.passwordPolicy.shouldHaveNumber.toString()  )
+                        td Should Have Number
+                        th= setting.passwordPolicy.shouldHaveNumber  
+                      tr
+                        td 
+                          .form-check
+                            input#shouldHaveSymbol.form-check-input(type='checkbox', value= setting.passwordPolicy.shouldHaveSymbol.toString())
+                        td Should Have Symbol
+                        th= setting.passwordPolicy.shouldHaveSymbol  
+                        
+              div.btn.btn-primary.mt-5.mb-5(onclick="app.settings.exports.submit()") Export
+              
 
 block specific-js
   // Data table plugin
   script.
     app.settings = {};
-    app.settings.passwordPolicy = {};
-    app.settings.passwordPolicy.data = {};
+    app.settings.exports = {};
+    app.settings.exports.data = {};
   script(type='text/javascript', src='/js/views/pages/settings/settings-exports.js')

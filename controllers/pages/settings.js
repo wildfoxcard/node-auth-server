@@ -1,3 +1,10 @@
+const fs = require('fs');
+const yaml = require('js-yaml');
+const path = require('path');
+
+const Permission = require("../../models/Permission");
+const Role = require("../../models/Role");
+const User = require("../../models/User");
 const Settings = require("../../models/Settings");
 const {
   errorReporter,
@@ -193,10 +200,44 @@ exports.postNewUsers = async (req, res) => {
   }
 };
 
-exports.viewExports = (req, res) => {
+exports.viewExports = async (req, res) => {
   try {
+    const setting = await Settings.findOne({});
+    const permissions = await Permission.find({ isDeleted: { $ne: true } });
+    const roles = await Role.find({ isDeleted: { $ne: true } });
+    const testUsers = await User.find({
+      isDeleted: { $ne: true },
+      type: "TEST",
+    })
+      .populate("permissions")
+      // .populate('roles')
+      .populate({
+        path: "roles",
+        populate: {
+          path: "permissions",
+        },
+      })
+      .exec();
+    const applicationUsers = await User.find({
+      isDeleted: { $ne: true },
+      type: "APPLICATION",
+    })
+      .populate("permissions")
+      // .populate('roles')
+      .populate({
+        path: "roles",
+        // populate: {
+        //   path: "permissions",
+        // },
+      })
+      .exec();
     res.render("pages/settings/settings-exports", {
       title: "Exports | Settings",
+      setting,
+      permissions,
+      roles,
+      testUsers,
+      applicationUsers,
     });
   } catch (err) {
     errorReporterWithHtml({
@@ -206,6 +247,167 @@ exports.viewExports = (req, res) => {
     });
   }
 };
+
+exports.postExports = async (req, res) => {
+  try {
+    const {
+      permissions,
+      roles,
+      testUsers,
+      applicationUsers,
+      settings,
+      filename,
+      defaultPassword,
+    } = req.body;
+
+    const dbApplicationUsers = [],
+      dbTestUsers = [];
+
+    if (testUsers) {
+      for (var i = 0; i < testUsers.length; i++) {
+        const currentTestUser = await User.findOne({ email: testUsers[i] })
+          .populate("roles")
+          .populate("permissions")
+          .exec();
+
+        let addPropertiesObj = {};
+        let newPermissions = [];
+        let newRoles = [];
+
+        if (defaultPassword) {
+          addPropertiesObj.password = defaultPassword;
+        }
+
+        if (currentTestUser.permissions) {
+          newPermissions = currentTestUser.permissions.map((p) => p.name);
+        }
+
+        if (currentTestUser.roles) {
+          newRoles = currentTestUser.roles.map((r) => r.name);
+        }
+
+        dbTestUsers.push(
+          Object.assign(addPropertiesObj, {
+            email: testUsers[i],
+            permissions: newPermissions,
+            roles: newRoles,
+            profile: currentTestUser.profile,
+          })
+        );
+      }
+    }
+
+    if (applicationUsers) {
+      for (var i = 0; i < applicationUsers.length; i++) {
+        const currentApplicationUser = await User.findOne({
+          email: applicationUsers[i],
+        })
+          .populate("roles")
+          .populate("permissions")
+          .exec();
+
+        let addPropertiesObj = {};
+        let newPermissions = [];
+        let newRoles = [];
+
+        if (defaultPassword) {
+          addPropertiesObj.password = defaultPassword;
+        }
+
+        if (currentApplicationUser.permissions) {
+          newPermissions = currentApplicationUser.permissions.map(
+            (p) => p.name
+          );
+        }
+
+        if (currentApplicationUser.roles) {
+          newRoles = currentApplicationUser.roles.map((r) => r.name);
+        }
+
+        dbApplicationUsers.push(
+          Object.assign(addPropertiesObj, {
+            email: applicationUsers[i],
+            permissions: newPermissions,
+            roles: newRoles,
+            profile: currentApplicationUser.profile,
+          })
+        );
+      }
+    }
+
+    //all of settings
+
+    //download this in yaml
+    const finalData = {
+      permissions,
+      roles,
+      testUsers: dbTestUsers,
+      applicationUsers: dbApplicationUsers,
+      settings,
+    };
+
+    const filePath = path.join(__dirname, "..", "..","uploads", "exports");
+    const newFilename = `${filename}-${Date.now()}.yaml`
+
+    const finalYaml = yaml.dump(finalData);
+
+    await fs.writeFileSync(
+      path.join(filePath, newFilename),
+      finalYaml,
+      "utf8"
+    );
+
+    res.json({success: true, filename: newFilename})
+
+    // if (permissions) {
+    //   permissions.map((permission, i) => {
+    //     if (await Permissions.count({name: permission.name}) === 0) {
+    //       const newPermission = new Permissions({name: permission.name})
+    //     }
+    //   })
+    // }
+
+    // if (roles) {
+
+    // }
+
+    // if (testUsers) {
+
+    // }
+
+    // if (applicationUsers) {
+
+    // }
+
+    // if (filename) {
+
+    // }
+
+    // if (defaultPassword) {
+
+    // }
+  } catch (err) {
+    errorReporter({
+      err,
+      res,
+      message: "Fatal Error Logged",
+    });
+  }
+};
+
+exports.getExportsFile = (req, res) => {
+  try {
+    const filePath = path.join(__dirname, "..", "..","uploads", "exports");
+
+    res.download(path.join(filePath, req.query.filename))
+  } catch (err) {
+    errorReporter({
+      err,
+      res,
+      message: "Fatal Error Logged",
+    });
+  }
+}
 
 exports.viewImports = (req, res) => {
   try {

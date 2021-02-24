@@ -127,6 +127,16 @@ block content
               .form-group
                 label(for='userApprovedMessage') Message
                 textarea#userApprovedMessage.form-control(rows='8')
+                
+              h3.mt-5 User Invite
+
+              .form-group
+                label(for='inviteUserSubject') Subject
+                input#inviteUserSubject.form-control(type='text', aria-describedby='emailHelp', placeholder='Enter email')
+
+              .form-group
+                label(for='inviteUserMessage') Message
+                textarea#inviteUserMessage.form-control(rows='8')
 
               div.btn.btn-primary.mt-5.mb-5(onclick="app.settings.emailTemplates.save()") Save
               

@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const { resolveContent } = require("nodemailer/lib/shared");
 
 //custom
-const { sendEmailOverride } = require("../processes/send-email.js");
+const { sendEmailOverride } = require("../overrides/send-email.js");
 const SettingsModel = require("../models/Settings");
 
 exports.sendEmail = async ({ to, from, subject, text, token }) => {
@@ -11,8 +11,10 @@ exports.sendEmail = async ({ to, from, subject, text, token }) => {
     if (await sendEmailOverride({ to, from, subject, text })) return resolve();
 
     const {
-      vars: { host, fromEmail, company, username },
-    } = SettingsModel.findOne({});
+      emailTemplates: {
+        vars: { host, fromEmail, company, username },
+      },
+    } = await SettingsModel.findOne({});
 
     subject = this.parseEmailTemplateString(subject, {
       host,
@@ -108,12 +110,12 @@ exports.parseEmailTemplateString = (
   text,
   { host, fromEmail, company, username, token, userEmail }
 ) => {
-  text = text.replaceAll("{{host}}", host);
-  text = text.replaceAll("{{fromEmail}}", fromEmail);
-  text = text.replaceAll("{{company}}", company);
-  text = text.replaceAll("{{token}}", token);
-  text = text.replaceAll("{{userEmail}}", userEmail);
-  text = text.replaceAll("{{username}}", username);
+  text = text.replace(/{{host}}/g, host);
+  text = text.replace(/{{fromEmail}}/g, fromEmail);
+  text = text.replace(/{{company}}/g, company);
+  text = text.replace(/{{token}}/g, token);
+  text = text.replace(/{{userEmail}}/g, userEmail);
+  text = text.replace(/{{username}}/g, username);
 
   return text;
 };

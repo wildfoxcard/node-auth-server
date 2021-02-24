@@ -429,6 +429,8 @@ app.get("/api/v1/settings/new-users/", passportConfig.isAdmin, settingsControlle
 app.post("/api/v1/settings/new-users/", passportConfig.isAdmin, settingsController.postNewUsers);
 
 app.get("/settings/exports/", passportConfig.isAdmin, settingsController.viewExports);
+app.post('/api/v1/settings/exports/', passportConfig.isAdmin, settingsController.postExports)
+app.get('/api/v1/settings/exports/', passportConfig.isAdmin, settingsController.getExportsFile)
 app.get("/settings/imports/", passportConfig.isAdmin, settingsController.viewImports);
 
 app.get("/settings/email-templates/", passportConfig.isAdmin, settingsController.viewEmailTemplates);

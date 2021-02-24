@@ -1,9 +1,18 @@
 const validator = require("validator");
+const { uuid } = require('uuidv4');
 
-const UserModel = require("../../models/User");
+const User = require("../../models/User");
 const PermissionModel = require("../../models/Permission");
 const RoleModel = require("../../models/Role");
+const Settings = require("../../models/Settings");
 const { errorReporter } = require("../../processes/errorReporter");
+const {
+  processEnforcePasswordPolicy,
+} = require("../../processes/enforce-password-policy");
+const {
+  sendEmail,
+} = require("../../processes/send-email");
+
 
 exports.getIndex = (req, res) => {
   try {
@@ -24,13 +33,14 @@ exports.getForm = async (req, res) => {
     let data;
 
     if (req.query.id) {
-      data = await UserModel.findById(req.query.id);
+      data = await User.findById(req.query.id);
     }
 
     res.render("pages/user-management/form", {
       title: "Form | User Management",
       id: req.query.id,
       data,
+      uuid: uuid()
     });
   } catch (err) {
     errorReporterWithHtml({
@@ -92,7 +102,7 @@ exports.getManyForm = async (req, res) => {
       queryObj.type = type;
     }
 
-    const users = await UserModel.find(queryObj)
+    const users = await User.find(queryObj)
       .populate("permissions")
       // .populate('roles')
       .populate({
@@ -137,19 +147,30 @@ exports.getManyForm = async (req, res) => {
  */
 exports.postManyForm = async (req, res) => {
   try {
-    const { email } = req.body;
+    const {
+      email,
+      type,
+      password,
+      applicationToken,
+      shouldSendEmailInvitation,
+      isAdmin,
+    } = req.body;
 
     const validationErrors = [];
-    if (!validator.isEmail(req.body.email)) {
+    if (!validator.isEmail(email)) {
       validationErrors.push({ msg: "Please enter a valid email address." });
     }
-    if (!validator.isLength(req.body.password, { min: 8 })) {
-      validationErrors.push({
-        msg: "Password must be at least 8 characters long",
+
+    if (password) {
+      const passwordPolicy = await processEnforcePasswordPolicy({
+        text: password,
       });
-    }
-    if (req.body.password !== req.body.confirmPassword) {
-      validationErrors.push({ msg: "Passwords do not match" });
+
+      if (!passwordPolicy.success) {
+        passwordPolicy.messages.map((p) => {
+          validationErrors.push(p);
+        });
+      }
     }
 
     if (validationErrors.length) {
@@ -163,12 +184,36 @@ exports.postManyForm = async (req, res) => {
       gmail_remove_dots: false,
     });
 
-    const user = new UserModel({
-      email: req.body.email,
-      password: req.body.password,
-    });
+    let passwordOrToken = {};
 
-    UserModel.findOne({ email: req.body.email }, (err, existingUser) => {
+    switch (type) {
+      case "NORMAL":
+        passwordOrToken = {
+          password
+        };
+        break;
+      case "TEST":
+        passwordOrToken = {
+          password
+        };
+        break;
+      case "APPLICATION":
+        passwordOrToken = {
+          // password,
+          applicationToken
+        };
+        break;
+    }
+
+    const user = new User(
+      Object.assign(passwordOrToken, {
+        email,
+        type,
+        isAdmin,
+      })
+    );
+
+    User.findOne({ email: email }, async (err, existingUser) => {
       if (err) {
         throw err;
       }
@@ -178,23 +223,35 @@ exports.postManyForm = async (req, res) => {
           message: "Account with that email address already exists.",
         });
       }
-      user.save((err) => {
+
+      user.save(async (err) => {
         if (err) {
           throw err;
         }
-        req.logIn(user, (err) => {
-          if (err) {
-            throw err;
-          }
 
-          //prevent hased password from being exposed
-          delete user.password;
-
-          res.status(201).json({
-            success: true,
-            data: user,
+        //why isn't it a boolean! truthiness
+        if (shouldSendEmailInvitation == true) {
+          const { emailTemplates } = await Settings.findOne({});
+          await sendEmail({
+            to: email,
+            from: emailTemplates.vars.fromEmail,
+            subject: emailTemplates.inviteUserSubject,
+            text: emailTemplates.inviteUserMessage,
           });
+        }
+        // req.logIn(user, (err) => {
+        // if (err) {
+        //   throw err;
+        // }
+
+        //prevent hased password from being exposed
+        // delete user.password;
+
+        res.status(201).json({
+          success: true,
+          data: user,
         });
+        // });
       });
     });
   } catch (err) {
@@ -291,7 +348,7 @@ exports.putManyForm = async (req, res) => {
       delete users.permissions;
     }
 
-    const usersFromDb = await UserModel.find({
+    const usersFromDb = await User.find({
       _id: { $in: users.map((p) => p._id) },
       isDeleted: {
         $ne: true,
@@ -310,7 +367,7 @@ exports.putManyForm = async (req, res) => {
     for (var i = 0; i < users.length; i++) {
       const user = users[0];
 
-      await UserModel.updateOne(
+      await User.updateOne(
         { _id: user._id },
         {
           $set: user,
@@ -318,7 +375,7 @@ exports.putManyForm = async (req, res) => {
       );
     }
 
-    const returningUsersFromDb = await UserModel.find({
+    const returningUsersFromDb = await User.find({
       _id: { $in: users.map((p) => p._id) },
       isDeleted: {
         $ne: true,
@@ -383,7 +440,7 @@ exports.deleteManyForm = async (req, res) => {
       });
     }
 
-    const usersFromDb = await UserModel.find({
+    const usersFromDb = await User.find({
       _id: { $in: users.map((p) => p._id) },
     });
 
@@ -397,7 +454,7 @@ exports.deleteManyForm = async (req, res) => {
     for (var i = 0; i < users.length; i++) {
       const user = users[0];
 
-      await UserModel.updateOne(
+      await User.updateOne(
         { _id: user._id },
         {
           $set: {
@@ -442,7 +499,7 @@ exports.getSingleForm = async (req, res) => {
   try {
     const { _id } = req.params;
 
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       _id,
       isDeleted: { $ne: true },
     })
@@ -517,7 +574,7 @@ exports.putSingleForm = async (req, res) => {
       });
     }
 
-    const user = await UserModel.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { _id, isDeleted: { $ne: true } },
       body,
       { new: true }
@@ -566,7 +623,7 @@ exports.deleteSingleForm = async (req, res) => {
       });
     }
 
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       _id,
       isDeleted: { $ne: true },
     });
@@ -578,7 +635,7 @@ exports.deleteSingleForm = async (req, res) => {
       });
     }
 
-    const returningUser = await UserModel.findOneAndUpdate(
+    const returningUser = await User.findOneAndUpdate(
       { _id },
       { isDeleted: true },
       { new: true }
@@ -658,7 +715,7 @@ exports.postSingleAddPermissionToUser = async (req, res) => {
       });
     }
 
-    const newUser = await UserModel.findOneAndUpdate(
+    const newUser = await User.findOneAndUpdate(
       { _id: _userId },
       { $push: { permissions: { _id: _permissionId } } },
       { new: true }
@@ -706,7 +763,7 @@ exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
     const _permissionId = req.params._permissionsId;
     const _userId = req.params._id;
 
-    const usersWithSameId = await UserModel.findById(_userId);
+    const usersWithSameId = await User.findById(_userId);
 
     if (usersWithSameId === null) {
       return res.json({
@@ -715,7 +772,7 @@ exports.deleteSinglePermissionInArrayForUser = async (req, res) => {
       });
     }
 
-    const newUser = await UserModel.findOneAndUpdate(
+    const newUser = await User.findOneAndUpdate(
       { _id: _userId },
       { $pull: { permissions: _permissionId } },
       { new: true }
@@ -795,7 +852,7 @@ exports.postSingleAddRoleToUser = async (req, res) => {
       });
     }
 
-    const newUser = await UserModel.findOneAndUpdate(
+    const newUser = await User.findOneAndUpdate(
       { _id: _userId },
       { $push: { roles: { _id: _roleId } } },
       { new: true }
@@ -843,7 +900,7 @@ exports.deleteSingleRoleInArrayForUser = async (req, res) => {
     const _roleId = req.params._rolesId;
     const _userId = req.params._id;
 
-    const usersWithSameId = await UserModel.findById(_userId);
+    const usersWithSameId = await User.findById(_userId);
 
     if (usersWithSameId === null) {
       return res.json({
@@ -852,7 +909,7 @@ exports.deleteSingleRoleInArrayForUser = async (req, res) => {
       });
     }
 
-    const newUser = await UserModel.findOneAndUpdate(
+    const newUser = await User.findOneAndUpdate(
       { _id: _userId },
       { $pull: { roles: _roleId } },
       { new: true }

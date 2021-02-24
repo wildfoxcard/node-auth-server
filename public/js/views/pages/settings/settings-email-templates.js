@@ -7,6 +7,8 @@ app.settings.emailTemplates.save = () => {
   const emailChangeMessage = $("#emailChangeMessage").val();
   const userApprovedSubject = $("#userApprovedSubject").val();
   const userApprovedMessage = $("#userApprovedMessage").val();
+  const inviteUserSubject = $("#inviteUserSubject").val();
+  const inviteUserMessage = $("#inviteUserMessage").val();
 
   //vars
   const host = $("#userApprovedMessage").val();
@@ -25,6 +27,8 @@ app.settings.emailTemplates.save = () => {
       emailChangeMessage,
       userApprovedSubject,
       userApprovedMessage,
+      inviteUserSubject,
+      inviteUserMessage,
       vars: {
         host,
         fromEmail,
@@ -80,6 +84,8 @@ app.settings.emailTemplates.load = () => {
       // $("#emailChangeMessage").val(results.data.emailChangeMessage);
       $("#userApprovedSubject").val(results.data.userApprovedSubject);
       $("#userApprovedMessage").val(results.data.userApprovedMessage);
+      $("#inviteUserSubject").val(results.data.inviteUserSubject);
+      $("#inviteUserMessage").val(results.data.inviteUserMessage);
 
       //vars
       $("#userApprovedMessage").val(results.data.vars.host);
