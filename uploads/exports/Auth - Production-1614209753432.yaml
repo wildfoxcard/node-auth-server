@@ -17,16 +17,13 @@ testUsers:
 applicationUsers:
   - password: Password1
     email: application1@gmail.com
-    permissions: []
-    roles: []
     profile:
       $init: true
 settings:
   serverName: Auth - Production
   serverMainUrl: /dashboard
-  newUsersType: '["ANYONE"]'
+  newUsersType: 'ANYONE'
   varsHost: http://localhost:8080
-  varsFromEmail: ''
   varsCompany: our company
   varsUsername: buddy
   emailVerificationSubject: Please verify your email address on Hackathon Starter
@@ -72,8 +69,8 @@ settings:
 
     {{host}}/reset/{{token}}
 
-  passwordLength: '6'
-  shouldHaveUppercaseLetter: 'false'
-  shouldHaveLowercaseLetter: 'false'
-  shouldHaveNumber: 'false'
-  shouldHaveSymbol: 'false'
+  passwordLength: 6
+  shouldHaveUppercaseLetter: false
+  shouldHaveLowercaseLetter: false
+  shouldHaveNumber: false
+  shouldHaveSymbol: false

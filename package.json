@@ -85,7 +85,8 @@
     "twilio": "^3.49.2",
     "twit": "^2.2.11",
     "uuidv4": "^6.2.6",
-    "validator": "^13.1.1"
+    "validator": "^13.1.1",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

@@ -1,7 +1,0 @@
-testUsers: []
-applicationUsers: []
-settings:
-  shouldHaveUppercaseLetter: 'false'
-  shouldHaveLowercaseLetter: 'false'
-  shouldHaveNumber: 'false'
-  shouldHaveSymbol: 'false'
