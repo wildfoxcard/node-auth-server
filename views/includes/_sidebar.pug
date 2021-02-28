@@ -46,30 +46,30 @@ aside.app-sidebar
 
 
 
-		li.treeview(class={'is-expanded': activeGroup == 'forms'})
+		li.treeview(class={'is-expanded': activeGroup == 'docs'})
 			a.app-menu__item(href='#' data-toggle='treeview')
 				i.app-menu__icon.fa.fa-edit
 				span.app-menu__label Documentation
 				i.treeview-indicator.fa.fa-angle-right
 			ul.treeview-menu
 				li
-					a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
+					a.treeview-item(href='/docs/about/' class={'active': activePage == 'about'})
 						i.icon.fa.fa-circle-o
 						|  About
 				li
-					a.treeview-item(href='form-components.html' class={'active': activePage == 'form-components'})
+					a.treeview-item(href='/docs/imports/' class={'active': activePage == 'imports'})
 						i.icon.fa.fa-circle-o
-						|  Business Training
+						|  Import (Command Line)
 				li
-					a.treeview-item(href='form-custom.html' class={'active': activePage == 'form-custom'})
+					a.treeview-item(href='/docs/white-paper/' class={'active': activePage == 'white-paper'})
 						i.icon.fa.fa-circle-o
-						|  Programing Theory
+						|  Programing Theory (White Paper)
 				li
 					a.treeview-item(href='/docs/rest-api/#/' target="_blank")
 						i.icon.fa.fa-circle-o
 						|  Rest Api
 				li
-					a.treeview-item(href='form-notifications.html' class={'active': activePage == 'form-notifications'})
+					a.treeview-item(href='/docs/hooks/' class={'active': activePage == 'hooks'})
 						i.icon.fa.fa-circle-o
 						|  Hooks
 				li

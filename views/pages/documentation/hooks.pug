@@ -1,0 +1,31 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'hooks';
+  - var activeGroup = 'docs';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-edit
+        | Hooks
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Hooks
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          p Javascript doesn't provide the necessary language fundamentals for override functionality. In the future, this project may add type script to change this functionality, but for now we use the file directory.
+
+          p All overrides can be found in the override files, if you want a new hook, please open an issue.
+
+          h3 Send Email
+          p By resolving true, all current send email functionality will be overriden. See comments at bottom of function.

@@ -1,5 +1,10 @@
 extends ../layouts/_layout.pug
 
+
+block variables
+  - var activePage = 'api-examples';
+  - var activeGroup = 'docs';
+
 block head
   script(src='/js/lib/Chart.min.js')
 

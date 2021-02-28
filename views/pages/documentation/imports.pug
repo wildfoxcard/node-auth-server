@@ -1,0 +1,119 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'imports';
+  - var activeGroup = 'docs';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-edit
+        | Imports
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | Imports
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          p Exports can be generated in the settings. Imports are done by commandline. This is for automated processes to update this system without touching any code. If a system is designed down wind that requires the auth updates, then they can import a file.
+
+          div(style="border: 1px solid black;")
+            h3 Import Command
+            pre.
+              cd path/to/project/
+              imports.js --filename="example-file.yaml"
+          br
+          br
+
+          div(style="border: 1px solid black;")
+            h3 Yaml File Example
+              small example-file.yaml
+            pre.
+              permissions:
+                - Accounts - View
+                - Accounts - Edit
+              roles:
+                - Accounts Manager
+                - Technician
+              testUsers:
+                - password: Password1
+                  email: awesome@awesome.com
+                  permissions:
+                    - Accounts - View
+                  roles:
+                    - Accounts Manager
+                    - Technician
+              applicationUsers:
+                - email: application1@awesome.com
+                  token: jhklm3-123nl-2k3jm-12kbf8
+              settings:
+                general:
+                  serverName: Auth - Production
+                  serverMainUrl: /dashboard
+                passwordPolicy:
+                  passwordLength: 6
+                  shouldHaveUppercaseLetter: false
+                  shouldHaveLowercaseLetter: false
+                  shouldHaveNumber: false
+                  shouldHaveSymbol: false
+                newUsers:
+                  newUsersType: ANYONE
+                emailTemplates:
+                  vars: 
+                    host: http://localhost:8080
+                    company: buddy
+                    fromEmail: no-reply@awesome.com
+                    username: buddy
+                  emailVerificationSubject: Please verify your email address on Hackathon Starter
+                  emailVerificationMessage: >-
+                    Thank you for registering with hackathon-starter.
+
+
+                    This verify your email address please click on the following link, or paste
+                    this into your browser:
+
+
+                    http://{{host}}/account/verify/{{token}}
+
+
+                    Thank you
+                  passwordResetSubject: Reset your password on Hackathon Starter
+                  passwordResetMessage: >
+                    You are receiving this email because you (or someone else) have requested
+                    the reset of the password for your account.
+
+
+                    Please click on the following link, or paste this into your browser to
+                    complete the process:
+
+
+                    {{host}}/reset/{{token}}
+
+
+                    If you did not request this, please ignore this email and your password will
+                    remain unchanged.
+                  resetPasswordEmailSubject: Your Hackathon Starter password has been changed
+                  userApprovedSubject: User Request Approved
+                  userApprovedMessage: http://localhost:8080
+                  inviteUserSubject: Welcome aboard
+                  inviteUserMessage: >+
+                    You are receiving this email because you have been invited to become a user
+                    by an admin. Please confirm below.
+
+
+                    Please click on the following link, or paste this into your browser to
+                    complete the process:
+
+
+                    {{host}}/reset/{{token}}
+
+
+

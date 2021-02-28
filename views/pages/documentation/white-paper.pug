@@ -1,0 +1,137 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'white-paper';
+  - var activeGroup = 'docs';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-edit
+        | White Paper
+
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | White Paper
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          .alert.alert-warning 
+            strong This white paper is not completed. Then this alert is removed, the white paper is completed.
+
+          h2 Overview
+
+          p Many system exist without the ability of asumptions. This problem has been solved with convention base frameworks. 
+            | But the freedom of your code is now hampered by those assumption now caked into the system. 
+            | But this is engineering, all engineered works in the physical world have to follow assumptions called physics. 
+            | Most things design now days have interchangable parts. We shall adopted interchangable parts into our stack for now then see what physics principals can be borrowed.
+
+          h2 Systems, subsystems, and interchangable parts.
+
+          p This project is a sub-system acts as an interchangable part. 
+            | If you follow the rest api, you can create this system in ASP .NET for example.  
+            | In the future, they will need to implement GraphQL too.
+
+          P Lets define a subsystem and a system with the image below.
+
+
+          p The purpose of the system is to modulize services to quickly staffold a WildFox Web Engine.
+
+          img(src="/docs/white-paper/system-vs-subsytem.png")
+
+          p Imagine a set of servers providing marketing services. 
+            | Now imagine a set of servers for  account services. 
+            | Both sets may use the same technology services like reading a pdf. 
+            | So both sets of servers are build from similar parts. 
+            | Both sets can be consider two different systems.
+            | But also we can combine both sets and make one system. 
+            | A system can be consider the most outward encapselation or the scope your viewing the system from.
+          
+          h3 Adding pressure
+
+          p The purpose of interchangable parts is to make different systems that connects. 
+            | Subsystems that connect transfers controlled energy. We will refer to this as pressure.
+
+          p All subsystems need to confine to work from the same type of pressure. 
+            | Aka, you can't put hydroclic fuild into your gas tank. 
+            | To create a system with assumptions, all sub-systems need to be powered by different pressure or bleed of pressure from one source.
+            | This source will be the pontiential authorization of a user. 
+            | The source is this project. 
+            | But to similify things, we stack the authorization servers by user type. 
+            | This provides many benefits. 
+            | Business people will easily be able to understand the system. 
+            | Programmers have a new type of schema they can draw up, explaination below. 
+            | Features design for one user-types will be available for consumption on all user-types.
+
+          h3 Adding Time
+
+          p Time is controlled by the queue messages. If you have cron params, it will run like a cron. If you have no cron, it will run immediately.
+
+
+          h3 Trouble Shooting 
+
+          p All systems down stream from this project will be powered by a stack of this project. 
+            | If this system is wrong, it will effect all system down stream. 
+            | When looking for a more elusive error, one must start at the source.
+            | Once the source is proven to work correctly, then the next system should be tested.
+            | Then the system that is effected by the second system, and so on.
+
+          h3 Diagrams 
+
+          p A server will most likely hold many diagrams as its functionality. 
+            | These diagrams are great at programicly mapping user stories.
+            | We will discuse many user stories now.
+
+          h4 Action
+
+          p Here you can see the user login.
+
+          img(src="/docs/white-paper/diagram-user-login.png")
+
+          h4 Split
+
+          p Here you can see the user by status type can split this form routing to two different user-types.
+
+          img(src="/docs/white-paper/diagram-split.png")
+
+          h4 Approval/Rejection
+
+          p Here you can see the employee is waiting for the managers approve to enter the system.
+
+          img(src="/docs/white-paper/diagram-approve-reject.png")
+
+          h4 Promotion
+
+          p Here you can see the user becoming a manager.
+
+          img(src="/docs/white-paper/diagram-promotion.png")
+
+          h4 Demotion 
+
+          p Here you can see the manager becoming an employee. (User story: current manager promoted changed location and is running a different store. New manager is coming to this store.)
+
+          img(src="/docs/white-paper/diagram-demotion.png")
+
+          h4 Deligation
+
+          p Here you can see the client fill out the insurance form. 
+            | The form has to be approved by the underwriter, then the manager. 
+            | Then an email is sent with result. 
+            | A status base split occurs with two outcomes. 
+
+            
+          img(src="/docs/white-paper/diagram-delegation.png")
+
+          h3 The Engine.
+
+          p The feel of the engine from the developer point of view is he updates yaml is he needs permissions. And uses an api if time is a variable. (ie Tuesday at 5pm)
+
+          p The queue can be treated as cloud functions. Great for prototype/small implementation of third party applications.
+
+          p Cloud functions can call other cloud functions by routing a new message.

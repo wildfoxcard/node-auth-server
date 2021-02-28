@@ -1,0 +1,31 @@
+extends ../../layouts/_layout
+
+block variables
+  - var activePage = 'about';
+  - var activeGroup = 'docs';
+
+block content
+  .app-title
+    div
+      h1
+        i.fa.fa-edit
+        | About
+
+    
+    ul.app-breadcrumb.breadcrumb.side
+      li.breadcrumb-item
+        a(href="/dashboard")
+          i.fa.fa-home.fa-lg
+      li.breadcrumb-item
+        | About
+
+  .row
+    .col-md-12
+      .tile
+        .tile-body
+          br
+          p Version: -1 (untested)
+          br
+          br
+          img(src="/docs/about/about-wildfox-stack.png", style="width: 100%")
+

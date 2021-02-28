@@ -42,6 +42,7 @@ const userController = require("./controllers/user");
 const userApiController = require("./controllers/user-api");
 const userRequestController = require("./controllers/pages/user-request");
 const errorsController = require("./controllers/pages/errors");
+const documentationController = require("./controllers/pages/documentation");
 
 
 /**
@@ -352,6 +353,12 @@ app.delete('/api/v1/roles/:_id/', passportConfig.isAdmin, rolesController.delete
 app.post('/api/v1/roles/:_id/permissions', passportConfig.isAdmin, rolesController.postSingleAddPermissionToRole); 
 app.delete('/api/v1/roles/:_id/permissions/:_permissionsId', passportConfig.isAdmin, rolesController.deleteSinglePermissionInArrayForRole);
 
+
+//docs
+app.get("/docs/about/", passportConfig.isAdmin, documentationController.getAbout);
+app.get("/docs/hooks/", passportConfig.isAdmin, documentationController.getHooks);
+app.get("/docs/imports/", passportConfig.isAdmin, documentationController.getImports);
+app.get("/docs/white-paper/", passportConfig.isAdmin, documentationController.getWhitePaper);
 
 
 
