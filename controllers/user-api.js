@@ -63,7 +63,10 @@ exports.postLogin = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
           // req.flash("errors", validationErrors);/
           // return res.redirect("/login");
         },
@@ -76,7 +79,7 @@ exports.postLogin = (req, res, next) => {
           res.status(400).json({ success: false, message: info });
           // return res.redirect("/login");
         },
-        successFN: (err, user) => {
+        successFN: async (err, user) => {
           if (err) {
             return next(err);
           }
@@ -85,16 +88,19 @@ exports.postLogin = (req, res, next) => {
             _id: user._id,
           };
 
-          var token = jwt.sign(claims, process.env.JWT_SECRET, {
+          var token = await jwt.sign(claims, process.env.JWT_SECRET, {
             expiresIn: 60, // in seconds
           });
 
+          console.log('jwt', token)
+
           //https://stackoverflow.com/questions/39163413/node-js-passport-jwt-how-to-send-token-in-a-cookie
           res.cookie("jwt", token); // add cookie here
-          res.status(200).json({ success: true, token: token });
+          res.status(200).json({ success: true, token, userId: user._id });
         },
-      }
-    )(req, res, next);
+      },
+      { req, res, next }
+    );
   } catch (err) {
     errorReporter({
       err,
@@ -140,7 +146,10 @@ exports.postSignup = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         signInErrorFN: (err) => {
           res
@@ -178,7 +187,6 @@ exports.postSignup = (req, res, next) => {
   }
 };
 
-
 /**
  * @swagger
  *
@@ -210,7 +218,10 @@ exports.postForgot = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         noUserErrorFN: () => {
           res.status(400).json({
@@ -240,7 +251,6 @@ exports.postForgot = (req, res, next) => {
     });
   }
 };
-
 
 /**
  * @swagger
@@ -284,7 +294,10 @@ exports.postReset = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         noUserWithTokenFN: () => {
           res.status(400).json({
@@ -314,7 +327,6 @@ exports.postReset = (req, res, next) => {
     });
   }
 };
-
 
 /**
  * @swagger
@@ -368,7 +380,10 @@ exports.postUpdateProfile = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         errorFN: (err) => {
           res.status(400).json({ success: false, message: err });
@@ -437,7 +452,10 @@ exports.postUpdatePassword = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         userFindByIdErrorFn: (err) => {
           res.status(400).json({ success: false, message: err });
@@ -461,7 +479,6 @@ exports.postUpdatePassword = (req, res, next) => {
     });
   }
 };
-
 
 /**
  * @swagger
@@ -556,7 +573,6 @@ exports.postVerifyEmail = (req, res, next) => {
   }
 };
 
-
 /**
  * @swagger
  *
@@ -607,7 +623,10 @@ exports.postVerifyEmailToken = (req, res, next) => {
         validationFailedFN: () => {
           res
             .status(422)
-            .json({ success: false, message: validationErrors.map(e => e.msg).join(", ") });
+            .json({
+              success: false,
+              message: validationErrors.map((e) => e.msg).join(", "),
+            });
         },
         noUserErrorFN: () => {
           res.status(400).json({
